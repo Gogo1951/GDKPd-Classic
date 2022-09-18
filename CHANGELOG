@@ -1,0 +1,159 @@
+commit 9757a6d389bca9b477277e332baf0b9b220febf5
+Author: poptix <poptix@gmail.com>
+Date:   Mon Apr 26 20:52:08 2021 -0500
+
+    Bump
+
+commit 5d47b05e57c2e119beab68d680d54521dc3b22a5
+Author: poptix <poptix@gmail.com>
+Date:   Mon Apr 26 20:26:01 2021 -0500
+
+    Update TOC
+
+commit 0095cefd2bb9cfd5b4adf12cf355d46ae8d65bcf
+Author: poptix <poptix@gmail.com>
+Date:   Sat Sep 26 03:53:31 2020 -0500
+
+    Fix GetLootSlotInfo return parameters, handle assholes
+
+commit 38b8434512874c9d625e32b6f56b22fce86bee88
+Author: poptix <poptix@gmail.com>
+Date:   Fri Sep 25 19:04:17 2020 -0500
+
+    Ignore obnoxiously large numbers
+
+commit 9a313d47cbde0ce70ca590ccc30d6080a072f782
+Author: poptix <poptix@gmail.com>
+Date:   Fri Sep 11 00:47:59 2020 -0500
+
+    2.0.3
+
+commit 4fcadf127d4c82cfbb3c0ee264d420b311fa7e88
+Author: poptix <poptix@gmail.com>
+Date:   Fri Sep 11 00:40:31 2020 -0500
+
+    Whitespace.
+
+commit 00a488ea48003b42ced00957b2750a380122721c
+Author: poptix <poptix@gmail.com>
+Date:   Fri Sep 11 00:35:13 2020 -0500
+
+    Fix toc to avoid twitch client issues
+
+commit e7b5c48cac8e38ef4b5d1d5313b3e5f694a8cf30
+Author: poptix <poptix@gmail.com>
+Date:   Sat Jul 25 01:16:52 2020 -0500
+
+    CHANGELOG
+
+commit be7ab66270c03155aacb1c8ddc8daa8e88eec35f
+Author: poptix <poptix@gmail.com>
+Date:   Sat Jul 25 01:16:24 2020 -0500
+
+    Give credit where credit is due. Bump interface version.
+
+commit 6572b7cd1aa248a2d53e0e7f2511d6cb7bdeba3a
+Author: poptix <poptix@gmail.com>
+Date:   Sat Jul 25 01:02:07 2020 -0500
+
+    Externals, Locale for extra share
+
+commit 4514c8ecb42b5e8dc7bd759671155813e3d99851
+Author: poptix <poptix@gmail.com>
+Date:   Sat Jul 25 00:24:20 2020 -0500
+
+    Set the correct interface version (even though it probably works in
+    retail too)
+
+commit a783f9ad08c09d497781fee718a627b8227d5bd2
+Author: poptix <poptix@gmail.com>
+Date:   Sat Jul 25 00:14:20 2020 -0500
+
+    Changelog.
+
+commit 47f8a59e1f56068078296a38975f348cc4a7606e
+Author: poptix <poptix@gmail.com>
+Date:   Fri Jul 24 23:41:26 2020 -0500
+
+    Add "additional raid member" option for raids that use it.
+    
+    Change some defaults
+
+commit 42a971f654bdeed958f8a992451f21252f1ba411
+Author: poptix <poptix@gmail.com>
+Date:   Fri Jul 24 20:46:13 2020 -0500
+
+    curse wants pkgmeta.yaml
+
+commit 15c100a5a80700b998a1453b9464ff44a45bf688
+Author: poptix <poptix@gmail.com>
+Date:   Thu Jul 16 00:16:03 2020 -0500
+
+    MailFrame:IsShown() isn't true until after MAIL_OPEN fires, use
+    MAIL_INBOX_UPDATE instead
+
+commit 12772b77750493fddc84920750fdd1d0885dd3c0
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 23:23:32 2020 -0500
+
+    Update Ace libraries, cosmetic changes
+
+commit f60bd9399042e6c1a2bb00ac2544b3308edc4bdc
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 22:25:04 2020 -0500
+
+    Gold seems more appropriate
+
+commit f34a9b80b9e19a9dc0b47b5568834b90c9bbd9b2
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 14:19:58 2020 -0500
+
+    Default export format is now tab delimited
+
+commit bfe92c2952ac774a4ccc284d4c24ce100c20e0e8
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 14:01:33 2020 -0500
+
+    More API changes
+
+commit 0623e8a9f3c27e241f9d7a752f47ba35e4737078
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 13:58:45 2020 -0500
+
+    ERR_TRADE_COMPLETE is arg2, not arg1
+
+commit 21b003fcaf91fab7dc5b35ad87d2a3d4e8b3e2ea
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 13:46:38 2020 -0500
+
+    Automatically put the owed balance into trade
+
+commit 90cc28a929598401baa2e0b5968bdbc7ea522b14
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 13:44:08 2020 -0500
+
+    SendAddonMessage with an empty payload causes a disconnect
+
+commit 780491c0151612d343be0be79f79aec533234ef2
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 13:42:55 2020 -0500
+
+    Cosmetic cleanup, one API change
+
+commit 0f5efa83444ef3ddc45369ac62325281b5b31816
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 13:36:09 2020 -0500
+
+    Initial cleanup. Bump to version 2.0.0, remove all the [GDKPd] spam
+
+commit a8be0b865bd59185026597104eb51d3a6ffc00cf
+Author: poptix <poptix@gmail.com>
+Date:   Wed Jul 15 12:51:43 2020 -0500
+
+    Initial non-working commit from CurseForge
+
+commit 520cf68f2f1b9a7e8c787620fc0ea3d8ed976b81
+Author: poptix <poptix@poptix.net>
+Date:   Wed Jul 15 12:18:18 2020 -0500
+
+    Initial commit
