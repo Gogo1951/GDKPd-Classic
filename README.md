@@ -1,5 +1,4 @@
-# gdkpd
-GDKPd for Classic
+# GDKPd Classic
 
 This is a modification of the GDKPd addon originally created by stolenlegacy
 
