@@ -25,7 +25,7 @@ Barring someone requesting me to take this down, I'm going to fix it up enough s
 Happy Raiding!
 
 
-> GDKPdClassic; made by popt1x and last updated on 27 APR 2021 - https://www.curseforge.com/wow/addons/gdkpd
+> GDKPdClassic; made by popt1x and last updated on 27 APR 2021 - https://www.curseforge.com/wow/addons/gdkpdclassic
 
 > GDKPd Classic; made by elwizard0 and last updated on 29 SEP 2020 - https://www.curseforge.com/wow/addons/gdkpd-classic
 
