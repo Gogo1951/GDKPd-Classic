@@ -1,7 +1,8 @@
 ## Interface: 11307
-## Title: GDKPd
-## Notes: Simplifies GDKP bidding processes
-## Author: poptix, Keaarori, stolenlegacy
+## Title: GDKPd (Wrath Classic)
+## Notes: Automate Your GDKP Auctions, Bids, & Payouts 
+## Author: Gogo, LemonDrake
+## X-Credits: Poptix, Gallantron, Elwizard0, Keaarori, StolenLegacy
 ## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
 ## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
 #@no-lib-strip@
