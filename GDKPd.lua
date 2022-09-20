@@ -1,3 +1,4 @@
+local addonName, GDKPdGlobal = ...
 -- GLOBALS: GDKPd, GDKPd_PotData, GDKPd_Anchor, GDKPd_BalanceData, SlashCmdList, SLASH_GDKPD1, SLASH_GDKPD2
 -- fetch all used functions into locals to improve performance
 local table, tinsert, tremove, pairs, ipairs, unpack, math, tostring, tonumber, select, _G, strlen, setmetatable, string, print, next, type, rawget, date =
@@ -417,7 +418,8 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
 				(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
 				(curPot > 0) then
-				SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
+				SendChatMessage("[Caution] " ..
+					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
 					"!", "RAID")
 			end
 			if aucdata.timeRemains <= 0 then
@@ -458,23 +460,23 @@ anchor.movetx.text = anchor:CreateFontString()
 anchor.movetx.text:SetFontObject(GameFontHighlightLarge)
 anchor.movetx.text:SetText(L["GDKPd: Drag to move\n/gdkpd and check \"Lock\" to hide"])
 anchor.movetx.text:SetAllPoints()
-GDKPd.status = CreateFrame("Frame", "GDKPd_Status", UIParent)
+GDKPd.status = CreateFrame("Frame", "GDKPd_Status", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local status = GDKPd.status
 status:SetSize(200, 90)
 status:Hide()
---[[status:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+status:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 function status:UpdateVisibility(forceCombat)
 	if GDKPd.opt.hide then
 		self:Hide()
@@ -671,23 +673,23 @@ function status:Update()
 	self:UpdateSize()
 end
 
-GDKPd.history = CreateFrame("Frame", "GDKPd_History", UIParent)
+GDKPd.history = CreateFrame("Frame", "GDKPd_History", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local history = GDKPd.history
 history:SetSize(200, 95)
 history:Hide()
---[[history:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+history:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 history.header = CreateFrame("Button", nil, history)
 history.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 history.header:SetSize(133, 34)
@@ -829,23 +831,23 @@ function history:Update()
 	self:SetHeight(size)
 end
 
-GDKPd.itemsettings = CreateFrame("Frame", "GDKPd_ItemSettings", UIParent)
+GDKPd.itemsettings = CreateFrame("Frame", "GDKPd_ItemSettings", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local itemsettings = GDKPd.itemsettings
 itemsettings:SetWidth(250)
 itemsettings:Hide()
---[[itemsettings:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+itemsettings:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 itemsettings.header = CreateFrame("Button", nil, itemsettings)
 itemsettings.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 itemsettings.header:SetSize(133, 34)
@@ -964,8 +966,11 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 	f.minBid:SetMultiLine(nil)
 	f.minBid:SetScript("OnEditFocusGained", function(self) if not f.itemID then self:ClearFocus() end end)
 	f.minBid:SetScript("OnEnterPressed",
-		function(self) GDKPd.opt.customItemSettings[f.itemID].minBid = self:GetNumber() > 0 and self:GetNumber() or nil self:
-			ClearFocus() itemsettings:Update() end)
+		function(self) GDKPd.opt.customItemSettings[f.itemID].minBid = self:GetNumber() > 0 and self:GetNumber() or nil
+			self:
+				ClearFocus()
+			itemsettings:Update()
+		end)
 	f.minBid:SetScript("OnEscapePressed",
 		function(self) self:SetNumber(GDKPd.opt.customItemSettings[f.itemID].minBid) self:ClearFocus() end)
 	f.minBid:SetFont("Fonts\\FRIZQT__.TTF", 10)
@@ -1000,11 +1005,17 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 	f.minIncrement:SetMultiLine(nil)
 	f.minIncrement:SetScript("OnEditFocusGained", function(self) if not f.itemID then self:ClearFocus() end end)
 	f.minIncrement:SetScript("OnEnterPressed",
-		function(self) GDKPd.opt.customItemSettings[f.itemID].minIncrement = self:GetNumber() > 0 and self:GetNumber() or nil self
-			:ClearFocus() itemsettings:Update() end)
+		function(self) GDKPd.opt.customItemSettings[f.itemID].minIncrement = self:GetNumber() > 0 and self:GetNumber() or nil
+			self
+				:ClearFocus()
+			itemsettings:Update()
+		end)
 	f.minIncrement:SetScript("OnEscapePressed",
 		function(self) if GDKPd.opt.customItemSettings[f.itemID].minIncrement then self:SetNumber(GDKPd.opt.customItemSettings
-			[f.itemID].minIncrement) else self:SetText("") end self:ClearFocus() end)
+					[f.itemID].minIncrement)
+			else self:SetText("") end
+			self:ClearFocus()
+		end)
 	f.minIncrement:SetFont("Fonts\\FRIZQT__.TTF", 10)
 	f.minIncrement:SetTextColor(1, 1, 1)
 	f.minIncrement:SetPoint("TOPLEFT", f.minBid.g, "TOPRIGHT")
@@ -1080,23 +1091,23 @@ itemsettings.hide:SetPoint("BOTTOM", 0, 15)
 itemsettings.hide:SetText(L["Hide"])
 itemsettings.hide:SetScript("OnClick", function() itemsettings:Hide() end)
 itemsettings.scroll:SetPoint("BOTTOMRIGHT", itemsettings.hide, "TOPRIGHT", 0, 10)
-GDKPd.itemLevels = CreateFrame("Frame", "GDKPd_ItemLevels", UIParent)
+GDKPd.itemLevels = CreateFrame("Frame", "GDKPd_ItemLevels", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local itemlevels = GDKPd.itemLevels
 itemlevels:SetWidth(250)
 itemlevels:Hide()
---[[itemlevels:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+itemlevels:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 itemlevels.header = CreateFrame("Button", nil, itemlevels)
 itemlevels.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 itemlevels.header:SetSize(133, 34)
@@ -1294,23 +1305,23 @@ function itemlevels:Update()
 	self:SetHeight(height)
 end
 
-GDKPd.version = CreateFrame("Frame", "GDKPd_Versions", UIParent)
+GDKPd.version = CreateFrame("Frame", "GDKPd_Versions", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local version = GDKPd.version
 version:SetSize(200, 85)
 version:Hide()
---[[version:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+version:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 version.header = CreateFrame("Button", nil, version)
 version.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 version.header:SetSize(133, 34)
@@ -1489,22 +1500,22 @@ function GDKPd:MailBalanceGold(targetName)
 	self.balance:Update()
 end
 
-GDKPd.balance = CreateFrame("Frame", "GDKPd_PlayerBalance", status)
+GDKPd.balance = CreateFrame("Frame", "GDKPd_PlayerBalance", status, BackdropTemplateMixin and "BackdropTemplate")
 local balance = GDKPd.balance
 balance:SetSize(200, 95)
---[[balance:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+balance:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 balance.header = CreateFrame("Button", nil, balance)
 balance.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 balance.header:SetSize(133, 34)
@@ -1672,22 +1683,22 @@ function balance:Update()
 	end
 end
 
-GDKPd.playerBalance = CreateFrame("Frame", "GDKPd_PlayerBalance", UIParent)
+GDKPd.playerBalance = CreateFrame("Frame", "GDKPd_PlayerBalance", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local playerBalance = GDKPd.playerBalance
 playerBalance:SetSize(200, 95)
---[[playerBalance:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+playerBalance:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 playerBalance.header = CreateFrame("Button", nil, playerBalance)
 playerBalance.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 playerBalance.header:SetSize(133, 34)
@@ -1797,22 +1808,22 @@ function playerBalance:Update()
 	self:UpdateVisibility()
 end
 
-GDKPd.exportframe = CreateFrame("Frame", "GDKPd_Export", UIParent)
+GDKPd.exportframe = CreateFrame("Frame", "GDKPd_Export", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 local export = GDKPd.exportframe
 export:Hide()
---[[export:SetBackdrop({
-	bgFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
-	edgeFile="Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
-	tileSize=32,
-	edgeSize=24,
-	tile=true,
-	insets={
-		top=6,
-		bottom=6,
-		right=6,
-		left=6,
+export:SetBackdrop({
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Background",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Gold-Border",
+	tileSize = 32,
+	edgeSize = 24,
+	tile = true,
+	insets = {
+		top = 6,
+		bottom = 6,
+		right = 6,
+		left = 6,
 	},
-})--]]
+})
 export.header = CreateFrame("Button", nil, export)
 export.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header")
 export.header:SetSize(133, 34)
@@ -2264,11 +2275,13 @@ function GDKPd:DistributePot()
 	end
 	for numRaid = 1, numraid do
 		if self.opt.AdditionalRaidMembersEnable then
-			GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid))] = GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid)
-				)] + math.floor((distAmount or 0) / (numraid + numadditionalmemb))
+			GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid))] = GDKPd_PotData.playerBalance[
+				(UnitName("raid" .. numRaid)
+					)] + math.floor((distAmount or 0) / (numraid + numadditionalmemb))
 		else
-			GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid))] = GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid)
-				)] + math.floor((distAmount or 0) / numraid)
+			GDKPd_PotData.playerBalance[(UnitName("raid" .. numRaid))] = GDKPd_PotData.playerBalance[
+				(UnitName("raid" .. numRaid)
+					)] + math.floor((distAmount or 0) / numraid)
 		end
 	end
 	GDKPd_PotData.prevDist = GDKPd_PotData.potAmount
@@ -2309,17 +2322,17 @@ function GDKPd:GetUnoccupiedFrame()
 		end
 		c = c + 1
 	end
-	local f = CreateFrame("Frame", "GDKPdBidFrame" .. c, UIParent)
+	local f = CreateFrame("Frame", "GDKPdBidFrame" .. c, UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	f:SetSize(300, 60)
-	--[[f:SetBackdrop({
-		bgFile="Interface\\Tooltips\\UI-Tooltip-Background",
-		tileSize=16,
-		edgeSize=24,
-		edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
-		tile=true,
-		edgeSize=16,
-		insets={top=5,bottom=5,left=5,right=5},
-	})--]]
+	f:SetBackdrop({
+		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+		tileSize = 16,
+		edgeSize = 24,
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		tile = true,
+		edgeSize = 16,
+		insets = { top = 5, bottom = 5, left = 5, right = 5 },
+	})
 	if c > 1 then
 		f:SetPoint("TOPLEFT", GDKPd.frames[c - 1], "BOTTOMLEFT")
 	else
@@ -2396,7 +2409,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.autobid:Show()
 		f.hide:Enable()
 	end)
-	f.bidbox = CreateFrame("EditBox", nil, f)
+	f.bidbox = CreateFrame("EditBox", nil, f, BackdropTemplateMixin and "BackdropTemplate")
 	f.bidbox:SetMultiLine(nil)
 	f.bidbox:SetScript("OnEditFocusGained", function(self)
 		if self.disabled then
@@ -2420,7 +2433,7 @@ function GDKPd:GetUnoccupiedFrame()
 		end
 		self:SetNumber(0)
 	end)
-	--f.bidbox:SetBackdrop({bgFile="Interface\\ChatFrame\\UI-ChatInputBorder",tile=false})
+	f.bidbox:SetBackdrop({ bgFile = "Interface\\ChatFrame\\UI-ChatInputBorder", tile = false })
 	f.bidbox:SetTextInsets(5, 5, 2, 2)
 	f.bidbox:SetSize(40, 16)
 	f.bidbox:SetFont("Fonts\\FRIZQT__.TTF", 9)
@@ -2999,8 +3012,11 @@ GDKPd.options = {
 					softMax = 2,
 					name = L["Frame scale"],
 					order = 5,
-					set = function(info, value) GDKPd.opt.appearScale = value for _, f in ipairs(GDKPd.frames) do f:SetScale(value) end GDKPd_Anchor
-						:SetScale(value) end,
+					set = function(info, value) GDKPd.opt.appearScale = value
+						for _, f in ipairs(GDKPd.frames) do f:SetScale(value) end
+						GDKPd_Anchor
+							:SetScale(value)
+					end,
 					get = function() return GDKPd.opt.appearScale end,
 				},
 				bidButtonReenableDelay = {
@@ -3032,7 +3048,9 @@ GDKPd.options = {
 				useSlimML = {
 					type = "toggle",
 					set = function(info, value) if value and (not GDKPd.opt.slimMLConfirmed) then StaticPopup_Show("GDKPD_SLIMMLWARN") else GDKPd
-						.opt.slimML = value end end,
+								.opt.slimML = value
+						end
+					end,
 					get = function() return GDKPd.opt.slimML end,
 					name = L["Use slim bidding window even while Master Looter"],
 					width = "full",
@@ -3040,8 +3058,11 @@ GDKPd.options = {
 				},
 				forceHideShow = {
 					type = "toggle",
-					set = function(info, value) GDKPd.opt.forceHideShow = value for _, f in ipairs(GDKPd.frames) do f.hide:SetAlpha(value
-						and 1 or 0) end end,
+					set = function(info, value) GDKPd.opt.forceHideShow = value
+						for _, f in ipairs(GDKPd.frames) do f.hide:SetAlpha(value
+								and 1 or 0)
+						end
+					end,
 					get = function() return GDKPd.opt.forceHideShow end,
 					order = 8.5,
 					width = "full",
@@ -3199,6 +3220,28 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				LibStub("AceConfigDialog-3.0"):Open("GDKPd")
 			end
 		end
+
+		--Minimap Icon Creation
+		self.LDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
+			type = "data source",
+			text = addonName,
+			icon = "Interface\\AddOns\\" .. addonName .. "\\Images\\GDKPd.tga",
+			OnClick = function(self, button, down)
+				if button == "LeftButton" then
+					LibStub("AceConfigDialog-3.0"):Open("GDKPd")
+				end
+			end,
+			OnTooltipShow = function(tooltip)
+				tooltip:AddLine(addonName .. " (Wrath Classic)")
+				tooltip:AddLine("Automate Your GDKP Auctions, Bids, & Payouts", 255, 255, 255, false)
+				tooltip:AddLine(" ")
+				tooltip:AddLine("Click|cffffffff : Open Settings|r ")
+			end
+		})
+
+		self.minimapicon = LibStub("LibDBIcon-1.0")
+		self.minimapicon:Register("GDKPdLDB", self.LDB, self.db.global)
+
 		SLASH_GDKPD1 = "/gdkpd"
 		SLASH_GDKPD2 = "/gdkp"
 		anchor:SetPoint(self.opt.point.point, UIParent, self.opt.point.relative, self.opt.point.x, self.opt.point.y)
