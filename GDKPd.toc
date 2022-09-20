@@ -1,4 +1,4 @@
-## Interface: 11307
+## Interface: 30400
 ## Title: GDKPd (Wrath Classic)
 ## Notes: Automate Your GDKP Auctions, Bids, & Payouts 
 ## Author: Gogo, LemonDrake
