@@ -112,14 +112,6 @@ Gogo
 
 <br>
 
-**Gargul**
-> 
-> GDKPd pairs really nicely with Gargul's Trade-Announce and Pack-Rat Master Looting Automation features!
-> 
-> Download from CurseForge : https://www.curseforge.com/wow/addons/gargul
-
-<br>
-
 #### Other Projects from the GDKPd Team
 
 <br>
