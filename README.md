@@ -2,16 +2,21 @@
 
 Automate Your GDKP Auctions, Bids, & Payouts in Classic WoW.
 
+<br>
 
 ### :gem:  **KEY FEATURES**
 
+<br>
 
 * Spend your raid playing the game -- not tracking bids or fumbling with tracking spreadsheets.
 * GDKPd picks up bids in raid chat, announces, high bidders, winners, pot amounts, etc.
 * NOTE: GDKPd is NOT required by raid members at all, only the Master Looter has to have it installed, but there are tools for bidders as well.
 
+<br>
+
 #### Taken from original add-on feature list. (https://www.wowace.com/projects/gdkpd)
 
+<br>
 
 An all-in-one GDKP distribution suite!
 
