@@ -128,7 +128,7 @@ Gogo
 > 
 > A better LFG tool for Classic WoW.
 > 
-> Download from CurseForge : https://www.curseforge.com/wow/addons/ranksentinel
+> Download from CurseForge : https://www.curseforge.com/wow/addons/groupie
 
 <br>
 
