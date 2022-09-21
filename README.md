@@ -2,11 +2,9 @@
 
 Automate Your GDKP Auctions, Bids, & Payouts in Classic WoW.
 
-<br>
 
 ### :gem:  **KEY FEATURES**
 
-<br>
 
 * Spend your raid playing the game -- not tracking bids or fumbling with tracking spreadsheets.
 * GDKPd picks up bids in raid chat, announces, high bidders, winners, pot amounts, etc.
@@ -14,7 +12,6 @@ Automate Your GDKP Auctions, Bids, & Payouts in Classic WoW.
 
 #### Taken from original add-on feature list. (https://www.wowace.com/projects/gdkpd)
 
-<br>
 
 An all-in-one GDKP distribution suite!
 
@@ -46,7 +43,6 @@ Slash command usage:
 * /gdkpd wipe - Wipe the history of pots (displays confirmation dialog)
 * /gdkpd <anything other than the above> - Open configuration dialog
 
-<br>
 
 ### :link:  **LINKS**
 
@@ -56,11 +52,9 @@ Discord : https://discord.gg/HRQ2VZtphg
 
 Github : https://github.com/Gogo1951/GDKPd-Classic
 
-<br>
 
 ### :hand:  **CURRENT NEEDS**
 
-<br>
 
 Look... just a personal request. GDKPs get a bad rep because frankly a lot of people who run GDKPs are shady AF. This makes promoting GDKPd, and finding people to work on it really hard. Please stop being shady. For this add-on to be healthy, there needs to be some satisfaction that the work put in doesn't just make WoW a shittier place.
 
@@ -74,11 +68,9 @@ Suggestions for running a good GDKP...
 * Be up-front with what percentage you're taking as the organizer (and please, don't take more than 5% -- you aren't better than the people on your raid team).
 * Run smooth runs. You won't have any trouble making money. I ran GDKPs when the game was real and hit gold cap on 2 toons. I ran them in Classic and had 150k before TBC even hit. All with 0% "org fee" -- people wouldn't stand for a raid leader stealing 20% of the items that dropped... maybe one or two, 5% -- that's fine... any more than that and you're just a shady fuck who is actively making it harder for me to develop and GDKP add-on. (=
 
-<br>
 
-### 🤑 History
+### 🤑 HISTORY
 
-<br>
 
 GDKPs have risen in popularity in Classic WoW. The most popular auctioning add-on used is GDKPd, but it hasn't been well-maintained.
 
@@ -100,11 +92,9 @@ Gogo
 
 > GDKPd; made by gallantron and last updated on 27 OCT 2014 - https://www.curseforge.com/wow/addons/gdkpd
 
-<br>
 
 ### 🆒  **OTHER STUFF**
 
-<br>
 
 **Gargul**
 > 
@@ -112,11 +102,9 @@ Gogo
 > 
 > Download from CurseForge : https://www.curseforge.com/wow/addons/gargul
 
-<br>
 
 #### Other Projects from the GDKPd Team
 
-<br>
 
 **Groupie** by Gogo, LemonDrake, & Kynura
 > 
@@ -124,12 +112,9 @@ Gogo
 > 
 > Download from CurseForge : https://www.curseforge.com/wow/addons/ranksentinel
 
-<br>
 
 **RankSentinel** by Kynura, & Gogo
 > 
 > Help your team put their best foot forward.
 > 
 > Download from CurseForge : https://www.curseforge.com/wow/addons/ranksentinel
-
-<br>
