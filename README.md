@@ -66,7 +66,7 @@ Suggestions for running a good GDKP...
 * Outlaw 'up-bidding' by people who are just being shady. If you set sufficient min-bid amounts, then it's on you as the raid organizer to stock the raid with active buyers.
 * Be up-front what the parse requirements are, if you have those.
 * Be up-front with what percentage you're taking as the organizer (and please, don't take more than 5% -- you aren't better than the people on your raid team).
-* Run smooth runs. You won't have any trouble making money. I ran GDKPs when the game was real and hit gold cap on 2 toons. I ran them in Classic and had 150k before TBC even hit. All with 0% "org fee" -- people wouldn't stand for a raid leader stealing 20% of the items that dropped... maybe one or two, 5% -- that's fine... any more than that and you're just a shady fuck who is actively making it harder for me to develop and GDKP add-on. (=
+* Run smooth runs. You won't have any trouble making money. I ran GDKPs when the game was real and hit gold cap on 2 toons. I ran them in Classic and had 150k before TBC even hit. All with 0% "org fee" -- you don't have to be greedy to make money. Take your 5%, that's fine... but please note that any more than that and you're just another shady fuck who is actively making it harder for me to develop a GDKP add-on. (=
 
 
 ### 🤑 HISTORY
