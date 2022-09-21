@@ -43,8 +43,11 @@ Slash command usage:
 * /gdkpd wipe - Wipe the history of pots (displays confirmation dialog)
 * /gdkpd <anything other than the above> - Open configuration dialog
 
+<br>
 
 ### :link:  **LINKS**
+
+<br>
 
 Download from CurseForge : https://www.curseforge.com/wow/addons/gdkpdclassic
 
@@ -52,9 +55,11 @@ Discord : https://discord.gg/HRQ2VZtphg
 
 Github : https://github.com/Gogo1951/GDKPd-Classic
 
+<br>
 
 ### :hand:  **CURRENT NEEDS**
 
+<br>
 
 Look... just a personal request. GDKPs get a bad rep because frankly a lot of people who run GDKPs are shady AF. This makes promoting GDKPd, and finding people to work on it really hard. Please stop being shady. For this add-on to be healthy, there needs to be some satisfaction that the work put in doesn't just make WoW a shittier place.
 
@@ -68,9 +73,11 @@ Suggestions for running a good GDKP...
 * Be up-front with what percentage you're taking as the organizer (and please, don't take more than 5% -- you aren't better than the people on your raid team).
 * Run smooth runs. You won't have any trouble making money. I ran GDKPs when the game was real and hit gold cap on 2 toons. I ran them in Classic and had 150k before TBC even hit. All with 0% "org fee" -- you don't have to be greedy to make money. Take your 5%, that's fine... but please note that any more than that and you're just another shady fuck who is actively making it harder for me to develop a GDKP add-on. (=
 
+<br>
 
 ### 🤑 HISTORY
 
+<br>
 
 GDKPs have risen in popularity in Classic WoW. The most popular auctioning add-on used is GDKPd, but it hasn't been well-maintained.
 
@@ -86,15 +93,19 @@ Let's go!
 
 Gogo
 
+<br>
+
 > GDKPdClassic; made by popt1x and last updated on 27 APR 2021 - https://www.curseforge.com/wow/addons/gdkpdclassic
-
+>
 > GDKPd Classic; made by elwizard0 and last updated on 29 SEP 2020 - https://www.curseforge.com/wow/addons/gdkpd-classic
-
+>
 > GDKPd; made by gallantron and last updated on 27 OCT 2014 - https://www.curseforge.com/wow/addons/gdkpd
 
+<br>
 
 ### 🆒  **OTHER STUFF**
 
+<br>
 
 **Gargul**
 > 
@@ -102,9 +113,11 @@ Gogo
 > 
 > Download from CurseForge : https://www.curseforge.com/wow/addons/gargul
 
+<br>
 
 #### Other Projects from the GDKPd Team
 
+<br>
 
 **Groupie** by Gogo, LemonDrake, & Kynura
 > 
@@ -112,8 +125,9 @@ Gogo
 > 
 > Download from CurseForge : https://www.curseforge.com/wow/addons/ranksentinel
 
+<br>
 
-**RankSentinel** by Kynura, & Gogo
+**RankSentinel** by Kynura & Gogo
 > 
 > Help your team put their best foot forward.
 > 
