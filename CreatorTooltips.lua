@@ -3,16 +3,17 @@ local addonName, addon = ...
 --Script to generate GUID for a player
 --/run local name = UnitName("player"); local guid = UnitGUID("player"); ChatFrame1:AddMessage(name.." has the GUID: "..guid);
 addon.GDKPdDevs = {
-    ["Player-4408-044DE7F9"] = "Team Member", -- Gogodeekay-Faerlina
-    ["Player-4408-03D2C535"] = "Team Member", -- Gogodruid-Faerlina
-    ["Player-4408-03D2C53D"] = "Team Member", -- Gogohunter-Faerlina
-    ["Player-4408-03D2C27F"] = "Team Member", -- Gogomage-Faerlina
-    ["Player-4408-03D2C4A6"] = "Team Member", -- Gogopaladin-Faerlina
-    ["Player-4408-03D2C57D"] = "Team Member", -- Gogopriest-Faerlina
-    ["Player-4408-03D2C295"] = "Team Member", -- Gogorogue-Faerlina
-    ["Player-4408-03D2C5E2"] = "Team Member", -- Gogoshaman-Faerlina
-    ["Player-4408-03D2C21E"] = "Team Member", -- Gogowarlock-Faerlina
-    ["Player-4408-03D2C4C4"] = "Team Member", -- Gogowarrior-Faerlina
+    -- GDKPd Team
+    ["Player-4800-048C8808"] = L["TeamMember"], -- Gogodeekay-Eranikus
+    ["Player-4800-048C887A"] = L["TeamMember"], -- Gogodruid-Eranikus
+    ["Player-4800-048C87ED"] = L["TeamMember"], -- Gogohunter-Eranikus
+    ["Player-4800-048C88C6"] = L["TeamMember"], -- Gogomage-Eranikus
+    ["Player-4800-048C88F0"] = L["TeamMember"], -- Gogopaladin-Eranikus
+    ["Player-4800-048C87F8"] = L["TeamMember"], -- Gogopriest-Eranikus
+    ["Player-4800-04942199"] = L["TeamMember"], -- Gogorogue-Eranikus
+    ["Player-4800-048C8800"] = L["TeamMember"], -- Gogoshaman-Eranikus
+    ["Player-4800-048C88CD"] = L["TeamMember"], -- Gogowarlock-Eranikus
+    ["Player-4800-048C87E4"] = L["TeamMember"], -- Gogowarrior-Eranikus
 
     -- Special Thanks
     -- TODO
