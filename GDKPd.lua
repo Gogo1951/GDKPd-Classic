@@ -383,6 +383,15 @@ local function pruneCrossRealm(name) -- only use for people in the raid group!
 	return GetUnitName(name, true) or localNameOnly(name)
 end
 
+-- doesn't work if this is a local function, don't ask me, I just work here
+function parseAmount(amountString)
+  parsed = tonumber(amountString)
+  if parsed < 100 then
+    return math.floor(parsed * 1000)
+  else 
+    return parsed
+end
+
 GDKPd = CreateFrame("Frame")
 local GDKPd = GDKPd
 GDKPd.frames = {}
@@ -3305,14 +3314,8 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					self.ignoredLinks[itemLink] = nil
 				end
 			end
-			if self.curAuction.item and msg:find("%d+") == 1 then
-				local newBid = tonumber(msg:match("([0-9]+%.?[0-9]*)[kK]"))
-				if not newBid then
-					newBid = tonumber(msg:match("%d+"))
-				else
-					newBid = math.floor(newBid * 1000)
-				end
-
+      if self.curAuction.item and msg:find("%d+") == 1 then
+        local newBid = parseAmount(msg:match("[0-9]+%.?[0-9]*"))
 				-- Ignore obnoxiously large numbers, they break %d formats and are over gold cap anyway
 				if newBid < 999999999 and (self.curAuction.curBid + self.curAuction.increment) <= newBid then
 					GDKPd.curAuction.curBid = newBid
