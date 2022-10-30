@@ -402,7 +402,15 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 			(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
 			(not (next(self.curAuction.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh)))
 			and (curPot > 0) then
-			SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
+				if self.opt.enhanceTimeRemaining then
+					if self.curAuction.bidders[1] then
+						SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
+					else
+						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
+					end
+				else
+					SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
+				end
 		end
 		if self.curAuction.timeRemains <= 0 then
 			self:Hide()
@@ -418,9 +426,17 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
 				(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
 				(curPot > 0) then
-				SendChatMessage("[Caution] " ..
+					if self.opt.enhanceTimeRemaining then
+						if aucdata.bidders[1] then
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
+						else
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
+						end
+					else
+						SendChatMessage("[Caution] " ..
 					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
-					"!", "RAID")
+					"!", "RAID")				
+					end
 			end
 			if aucdata.timeRemains <= 0 then
 				tinsert(auctionsToFinish, item)
@@ -2656,6 +2672,7 @@ local defaults = { profile = {
 	AdditonalRaidMembersAmount = 0,
 	auctionTimer = 20,
 	auctionTimerRefresh = 20,
+	invalidBidTimerRefresh = 0,
 	movable = true,
 	startBid = 20,
 	increment = 5,
@@ -2678,6 +2695,7 @@ local defaults = { profile = {
 		potValues = false,
 		auctionCancel = false,
 		auctionCancelRW = false,
+		invalidBid = false,
 	},
 	notifyVersions = {
 		notifyCompatibleOutdated = true,
@@ -2695,6 +2713,9 @@ local defaults = { profile = {
 	confirmMailAll = true,
 	confirmMail = false,
 	linkBalancePot = false,
+	roundBids = false,
+	enhanceTimeRemaining = false,
+	remindInvalidBid = false,
 } }
 
 GDKPd.options = {
@@ -2884,6 +2905,16 @@ GDKPd.options = {
 					set = function(info, value) GDKPd.opt.countdownTimerJump = value end,
 					get = function() return GDKPd.opt.countdownTimerJump end,
 				},
+				invalidBidTimerRefresh = {
+					type = "range",
+					softMin = 0,
+					softMax = 30,
+					order = 8.7,
+					name = L["Invalid bid timeout refresh"],
+					desc = L["The amount of seconds that have to pass after an invalid bid before the auction is closed"],
+					set = function(info, value) GDKPd.opt.invalidBidTimerRefresh = value end,
+					get = function() return GDKPd.opt.invalidBidTimerRefresh end,
+				},
 				autoAward = {
 					type = "toggle",
 					name = L["Auto-award loot to winner"],
@@ -2952,6 +2983,31 @@ GDKPd.options = {
 					get = function() return GDKPd.opt.linkBalancePot end,
 					order = 16,
 				},
+				roundBids = {
+					type = "toggle",
+					name = L["Round bids down to multiple of bid min increment"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.roundBids = value end,
+					get = function() return GDKPd.opt.roundBids end,
+					order = 17,
+				},		
+				enhanceTimeRemaining = {
+					type = "toggle",
+					name = L["Enhance time remaining messages"],
+					desc = L["Enhance time remaining messages to include current item and high bidder"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.enhanceTimeRemaining = value end,
+					get = function() return GDKPd.opt.enhanceTimeRemaining end,
+					order = 18,
+				},
+				remindInvalidBid = {
+					type = "toggle",
+					name = L["Send invalid bid reminders to users who bid too low"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.remindInvalidBid = value end,
+					get = function() return GDKPd.opt.remindInvalidBid end,
+					order = 19,
+				},
 			},
 			order = 1,
 		},
@@ -2989,6 +3045,7 @@ GDKPd.options = {
 						potValues = L["Hide 'Current pot:' announcements"],
 						auctionCancel = L["Hide 'Auction cancelled' announcements"],
 						auctionCancelRW = L["Hide 'Auction cancelled' announcements from raid warning"],
+						invalidBid = L["Hide 'Invalid Bid' reminders"],
 					},
 					set = function(info, key, value) GDKPd.opt.hideChatMessages[key] = value end,
 					get = function(info, key) return GDKPd.opt.hideChatMessages[key] end,
@@ -3312,7 +3369,9 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				else
 					newBid = math.floor(newBid * 1000)
 				end
-
+				if newBid >= self.curAuction.curBid and GDKPd.opt.roundBids then
+					newBid = math.floor(self.curAuction.curBid + self.curAuction.increment * math.floor((newBid - self.curAuction.curBid) / self.curAuction.increment))
+				end
 				-- Ignore obnoxiously large numbers, they break %d formats and are over gold cap anyway
 				if newBid < 999999999 and (self.curAuction.curBid + self.curAuction.increment) <= newBid then
 					GDKPd.curAuction.curBid = newBid
@@ -3325,6 +3384,11 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					SendChatMessage(("New highest bidder: %s (%d gold)"):format(sender, newBid),
 						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 					self.curAuction.timeRemains = math.max(self.opt.auctionTimerRefresh, self.curAuction.timeRemains)
+				else
+					if self.opt.remindInvalidBid then 
+						SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
+					end		
+					self.curAuction.timeRemains = math.max(self.opt.invalidBidTimerRefresh, self.curAuction.timeRemains)
 				end
 			end
 			local bidderName, newBid = string.match(msg, "New highest bidder: (%S+) %((%d+) gold%)")
@@ -3442,6 +3506,9 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				if self.curAuctions[bidItemLink] then
 					local aucdata = self.curAuctions[bidItemLink]
 					bidAmount = tonumber(bidAmount)
+					if bidAmount >= aucdata.curBid and GDKPd.opt.roundBids then
+						bidAmount = math.floor(aucdata.curBid + aucdata.increment * math.floor((bidAmount - aucdata.curBid) / aucdata.increment))
+					end
 					if (aucdata.curBid + aucdata.increment) <= bidAmount then
 						aucdata.curBid = bidAmount
 						if aucdata.bidders[sender] then
@@ -3453,6 +3520,11 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(bidItemLink, sender, bidAmount),
 							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.auctionTimerRefresh)
+					else
+						if self.opt.remindInvalidBid then 
+							SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
+						end	
+						self.curAuction.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
 					end
 				end
 			end
@@ -3690,7 +3762,7 @@ local function filterChat_CHAT_MSG_RAID(chatframe, event, msg)
 	if GDKPd.opt.hideChatMessages.bidFinished and msg:match("Auction finished") then
 		return true
 	end
-	if GDKPd.opt.hideChatMessages.secondsRemaining and msg:match("[Caution] (%d+) seconds remaining(.*)!") then
+	if GDKPd.opt.hideChatMessages.secondsRemaining and msg:match("%[Caution%] (%d+) seconds remaining(.*)!") then
 		return true
 	end
 	if GDKPd.opt.hideChatMessages.bidChats and
@@ -3731,6 +3803,14 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", function(chatframe, e
 	if msg:find(L[
 		"This raid uses GDKPd to faciliate its GDKP bidding process. While you can bid on items without having GDKPd installed, installing it provides you with a GUI bidding panel, auto bidding functions, auction timers, chat filtering and more!"
 		]:gsub("%[", "%%["):gsub("%]", "%%]")) then
+		return true
+	end
+	if msg:match("Invalid%. (.+) please bid at least (%d+) gold on (|c........|Hitem:.+|r).") then
+		return true
+	end
+end)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", function(chatframe, event, msg)
+	if GDKPd.opt.hideChatMessages.invalidBid and msg:match("Invalid%. (.+) please bid at least (%d+) gold on (|c........|Hitem:.+|r).") then
 		return true
 	end
 end)
