@@ -404,6 +404,10 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 			and (curPot > 0) then
 				if self.opt.enhanceTimeRemaining then
 					if self.curAuction.bidders[1] then
+						table.sort(self.curAuction.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+						for num, t in ipairs(self.curAuction.bidders) do
+							self.curAuction.bidders[t.bidderName] = num
+						end
 						SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
 					else
 						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
@@ -428,6 +432,10 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 				(curPot > 0) then
 					if self.opt.enhanceTimeRemaining then
 						if aucdata.bidders[1] then
+							table.sort(aucdata.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+							for num, t in ipairs(aucdata.bidders) do
+								aucdata.bidders[t.bidderName] = num
+							end
 							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
 						else
 							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
