@@ -3,11 +3,12 @@
 ## Title: GDKPd (Wrath Classic)
 ## Notes: Automate Your GDKP Auctions, Bids, & Payouts 
 ## Author: Gogo, LemonDrake
+## Version: 3.1.0
 ## X-Credits: Poptix, Gallantron, Elwizard0, Keaarori, StolenLegacy
 ## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
 ## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
 #@no-lib-strip@
-## X-Curse-Packaged-Version: 2.0.6 
+## X-Curse-Packaged-Version: 3.1.0
 ## X-Curse-Project-Name: gdkpdclassic 
 ## X-Curse-Project-ID: 397856
 LibStub\LibStub.lua
