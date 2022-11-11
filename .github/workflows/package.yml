@@ -2,8 +2,8 @@ name: Package Addon
 
 on:
   push:
-    branches: [ main ]
-    tags: [ "*" ]
+    branches: [main]
+    tags: ["*"]
 
 jobs:
   release:
@@ -21,3 +21,8 @@ jobs:
         uses: BigWigsMods/packager@master
         with:
           args: -g wrath
+
+      - name: Package and release Classic
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g classic
