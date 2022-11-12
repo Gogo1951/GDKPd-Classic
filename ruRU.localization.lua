@@ -155,3 +155,54 @@ What do you want to do with this pot?]=] ]==]
 What do you want to do with this pot?]=] ] = [=[You have selected the following pot:
 %s, dated %s, size %d gold.
 What do you want to do with this pot?]=] ]==]
+
+    -- Message Localization
+L["Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."] = true
+L["Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"] = true
+L["New highest bidder on %s: %s (%d gold)"] = true
+L["New highest bidder: %s (%d gold)"] = true
+L["Auction cancelled for %s."] = true
+L["Auction cancelled."] = true
+L["Auction finished for %s. Winner: %s. %s."] = true
+L["Current pot: "] = true
+L["Auction finished for %s. No bids recieved."] = true
+L["Auction finished. Winner: %s. %s."] = true
+L["Auction finished. No bids recieved."] = true
+L["Distributing pot. Pot size: %d gold. Amount to distribute: %d gold. Players in raid: %d(%d). Share per player: %d gold."] = true
+L["Distributing pot. Pot size: %d gold. Amount to distribute: %d gold. Players in raid: %d. Share per player: %d gold."] = true
+L["New highest bidder: %s (%d gold)"] = true
+L["Invalid. %s please bid at least %d gold on %s."] = true
+L["New highest bidder on %s: %s (%d gold)"] = true
+L["Invalid. %s please bid at least %d gold on %s."] = true
+L["[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"] = true
+L["[Caution] %d seconds remaining on %s. Bid at least %d gold!"] = true
+L["[Caution] "] = true
+L[" seconds remaining!"] = true
+L[" seconds remaining for item "] = true
+
+-- Message Match Localization
+L["Bidding starts on (|c........|Hitem:.+|r). Please bid in raid chat, starting bid (%d+) gold, minimum increment (%d+) gold. TTL: (%d+)/(%d+)"] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Please bid in raid chat, starting bid (%d+) gold, minimum increment (%d+) gold. TTL until expire: (%d+) seconds, TTL after bid: (%d+) seconds."] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Please bid in raid chat, starting bid (%d+) gold, minimum increment (%d+) gold. TTL after a bid is placed: (%d+) seconds."] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Please bid in raid chat, starting bid (%d+) gold, minimum increment (%d+) gold."] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Bid using format '%[item%] 1000', starting bid (%d+) gold, minimum increment (%d+) gold. TTL: (%d+)/(%d+)"] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Bid using format '%[item%] 1000', starting bid (%d+) gold, minimum increment (%d+) gold. TTL until expire: (%d+) seconds, TTL after bid: (%d+) seconds."] = true
+L["Bidding starts on (|c........|Hitem:.+|r). Please bid in raid chat, using format 'itemlink bid'. Starting bid (%d+) gold, minimum increment (%d+) gold. TTL after a bid is placed: (%d+) seconds."] = true
+L["New highest bidder: (%S+) %((%d+) gold%)"] = true
+L["New highest bidder on (|c........|Hitem:.+|r): (%S+) %((%d+) gold%)"] = true
+L["Auction finished. Winner: (%S+). (.+)."] = true
+L["Auction finished for (|c........|Hitem:.+|r)."] = true
+L["Auction finished for |c........|Hitem:.+|r%. Winner: (%S+)%. (.+)"] = true
+L["Auction cancelled for (|c........|Hitem:.+|r)%."] = true
+L["Distributing pot. Pot size: %d+ gold. Amount to distribute: %d+ gold. Players in raid: %d+. Share per player: (%d+) gold."] = true
+L["Distributing pot. Pot size: %d+ gold. Players in raid: %d+. Pot share per player: (%d+) gold."] = true
+L["New highest bidder(.*): (%S+) %((%d+) gold%)"] = true
+L["Auction finished"] = true
+L["Auction cancelled"] = true
+L["Auction finished."] = true
+L["Auction cancelled."] = true
+L["%[Caution%] (%d+) seconds remaining(.*)!"] = true
+L["seconds remaining"] = true
+L["Current pot: (%d+) gold"] = true
+L["Invalid%. (.+) please bid at least (%d+) gold on (|c........|Hitem:.+|r)."] = true
+L["Bidding starts on (|c........|Hitem:.+|r)."] = true
