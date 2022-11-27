@@ -20,9 +20,9 @@ jobs:
       - name: Package and release Wrath
         uses: BigWigsMods/packager@master
         with:
-          args: -g wrath
+          args: -g wrath -S
 
       - name: Package and release Classic
         uses: BigWigsMods/packager@master
         with:
-          args: -g classic
+          args: -g classic -S
