@@ -1,4 +1,4 @@
-name: Package Addon
+1name: Package Addon
 
 on:
   push:
@@ -17,12 +17,7 @@ jobs:
       - name: Clone project
         uses: actions/checkout@v1
 
-      - name: Package and release Wrath
+      - name: Package and release
         uses: BigWigsMods/packager@master
         with:
-          args: -g wrath
-
-      - name: Package and release Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g classic
+          args: -s
