@@ -7,7 +7,7 @@
 ## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
 ## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
 #@no-lib-strip@
-## X-Curse-Packaged-Version: 3.1.0
+## X-Curse-Packaged-Version: 3.1.2
 ## X-Curse-Project-Name: gdkpdclassic 
 ## X-Curse-Project-ID: 397856
 LibStub\LibStub.lua
