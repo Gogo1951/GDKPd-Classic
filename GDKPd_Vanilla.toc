@@ -2,7 +2,7 @@
 ## Title: GDKPd (Classic)
 ## Notes: Automate Your GDKP Auctions, Bids, & Payouts 
 ## Author: Gogo, LemonDrake
-## Version: 3.1.0
+## Version: 3.1.2
 ## X-Credits: Poptix, Gallantron, Elwizard0, Keaarori, StolenLegacy
 ## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
 ## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
