@@ -1,16 +1,24 @@
-## Interface-Classic: 11403
-## Interface-Wrath: 30400
 ## Title: GDKPd
 ## Notes: Automate Your GDKP Auctions, Bids, & Payouts 
 ## Author: Gogo, LemonDrake
-## Version: 3.1.2
 ## X-Credits: Poptix, Gallantron, Elwizard0, Keaarori, StolenLegacy
-## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
-## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
-#@no-lib-strip@
+
+## Interface: 100002
+## Interface-Classic: 11403
+## Interface-BCC: 20504
+## Interface-WOTLKC: 30400
+
+## Version: 3.1.2
 ## X-Curse-Packaged-Version: 3.1.2
 ## X-Curse-Project-Name: gdkpdclassic 
 ## X-Curse-Project-ID: 397856
+
+## OptionalDeps: LibStub, Ace3, CallbackHandler-1.0
+
+## SavedVariables: GDKPd_DB, GDKPd_PotData, GDKPd_BalanceData
+
+#@no-lib-strip@
+
 LibStub\LibStub.lua
 CallbackHandler-1.0\CallbackHandler-1.0.xml
 AceDB-3.0\AceDB-3.0.xml
