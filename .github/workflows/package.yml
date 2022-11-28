@@ -11,18 +11,19 @@ jobs:
 
     env:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
       GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Clone project
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
-      - name: Package and release Wrath
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g wrath -S
-
-      - name: Package and release Classic
-        uses: BigWigsMods/packager@master
+      - name: Package and release for Classic Era
+        uses: BigWigsMods/packager@v2
         with:
           args: -g classic -S
+
+      - name: Package and release for Wrath of the Lich King Classic
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -g wrath -S
