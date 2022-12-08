@@ -315,7 +315,9 @@ function addon.SetupConfig()
 						type = "description",
 						name = "|cff" .. addon.systemColor .. L["Delay Between Auctions"],
 						order = 80,
-						fontSize = "medium"
+						fontSize = "medium",
+						hidden = true,
+						disabled = true,
 					},
 					dropdown3 = {
 						type = "select",
@@ -326,6 +328,8 @@ function addon.SetupConfig()
 						values = addon.timerOptions,
 						set = function(info, val) addon.db.global.auctionDelay = val end,
 						get = function(info) return addon.db.global.auctionDelay end,
+						hidden = true,
+						disabled = true,
 					},
 				},
 			},

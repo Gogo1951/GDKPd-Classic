@@ -49,7 +49,7 @@ end
 --Stop an Auction
 function addon.StopAuction(isCancellation)
     addon.db.global.activeAuction = nil
-    if isCancellation then
+    if isCancellation and IsInRaid() then
         --TODO: update copy
         SendChatMessage(addon.messagePrefix .. " " .. L["Auction Cancelled"], "RAID")
     end
@@ -113,9 +113,16 @@ end
 local function StepAuction()
     local now = GetServerTime()
 
+
     if not addon.db.global.activeAuction then
         return
     end
+
+    --Stop the auction if the player ends up out of the raid for some reason
+    if not IsInRaid() and addon.db.global.activeAuction then
+        addon.StopAuction()
+    end
+
     --Step the auction every 1 second
     if (now - addon.db.global.activeAuction.lastUpdate) > 0 then
         addon.db.global.activeAuction.lastUpdate = now
@@ -176,12 +183,11 @@ local function StepAuction()
                     addon.itemData[addon.db.global.activeAuction.itemID].Link
                 ), "WHISPER", "COMMON", addon.db.global.activeAuction.highBidder)
                 --TODO: add bid to pot
-                addon.StopAuction()
             else
                 --No bids
                 --TODO: need copy
-                addon.StopAuction()
             end
+            addon.StopAuction()
         end
     end
 end
@@ -202,7 +208,7 @@ function Auctioneer:OnEnable()
         UpdateFrame:Show()
 
         --Clear active auction on reload
-        addon.db.global.activeAuction = nil
+        addon.StopAuction()
     end)
     self:RegisterEvent("CHAT_MSG_RAID", function(...)
         local e, msg, name = ...
