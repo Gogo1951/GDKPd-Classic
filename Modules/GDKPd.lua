@@ -499,6 +499,9 @@ function addon:OnInitialize()
 			bidIncrements = {},
 			minBidDefault = 500,
 			bidIncrementDefault = 250,
+			activeSession = nil,
+			activeAuction = nil,
+			historicalSessions = {},
 		}
 	}
 

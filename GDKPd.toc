@@ -22,7 +22,10 @@ embeds.xml
 Locales/enUS.lua
 
 Modules/Helpers.lua
+Modules/ItemZoneDB.lua
+Modules/ItemDataDB.lua
 Modules/Globals.lua
 Modules/GDKPd.lua
 Modules/CreatorTooltips.lua
 Modules/Minimap.lua
+Modules/Auctioneer.lua

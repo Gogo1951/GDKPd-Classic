@@ -53,6 +53,33 @@ L["Poor"] = true
 L["Loot History"] = true
 L["Save Loot History Between Sessions"] = true
 
+--Auctioneer
+L["Auction Cancelled"] = true
+L["Bidding is starting on"] = true
+L["Place your bids in raid chat"] = true
+L["Bidding Starts at"] = true
+L["with Minimum Increments of"] = true
+L["Good luck"] = true
+L["Gold"] = true
+L["seconds remaining"] = true
+L["seconds remaining on"] = true
+L["Minimum Bid now"] = true
+L["bid of"] = true
+L["is accepted as the new high bid"] = true
+L["is rejected because it is too low"] = true
+L["Bid at least"] = true
+L["on"] = true
+L["if you are interested"] = true
+L["has been sold to"] = true
+L["for"] = true
+L["Congrats"] = true
+L["Please pay"] = true
+L["when you collect"] = true
+L["Pot Total is now"] = true
+L[""] = true
+L[""] = true
+L[""] = true
+
 -------------------
 --SPECIAL STRINGS--
 -------------------
