@@ -9,7 +9,7 @@ local myname = UnitName("player")
 function addon.StartAuction(itemID)
     --Only start an auction if one is not active already
     if addon.db.global.activeAuction == nil then
-        local now = GetServerTime()
+        local now = GetServerTime() --We use Server time so that timers are only 1 second accurate
         local minBid = addon.db.global.minBidDefault
         if addon.db.global.minBids[itemID] then
             minBid = addon.db.global.minBids[itemID]
@@ -18,8 +18,8 @@ function addon.StartAuction(itemID)
         if addon.db.global.bidIncrements[itemID] then
             minIncrement = addon.db.global.bidIncrements[itemID]
         end
+        --Create auction object
         addon.db.global.activeAuction = {
-            --We use Server time so that timers are only 1 second accurate
             lastUpdate = now,
             itemID = itemID,
             startBid = minBid,
@@ -28,6 +28,8 @@ function addon.StartAuction(itemID)
             currentBid = minBid,
             highBidder = nil,
         }
+        --[RW] {rt2} GDKPd : Bidding is starting on [Overcharged Capacitor]!
+        --Place your bids in raid chat; Bidding Starts at 20 Gold, with Minimum Increments of 5 Gold. Good luck!
         SendChatMessage(format("%s %s %s! %s; %s %d %s, %s %d %s. %s",
             addon.messagePrefix,
             L["Bidding is starting on"],
@@ -65,8 +67,10 @@ local function ScanForBids(msg, name)
     if bid ~= nil then
         if bid >= addon.db.global.activeAuction.currentBid + addon.db.global.activeAuction.minIncrement
             or addon.db.global.activeAuction.highBidder == nil and bid >= addon.db.global.activeAuction.startBid then
+
             addon.db.global.activeAuction.currentBid = bid
             addon.db.global.activeAuction.highBidder = name
+            --[R] {rt2} GDKPd : SomeBidder's bid of 20 Gold is accepted as the new high bid!
             SendChatMessage(format("%s %s's %s %d %s %s!",
                 addon.messagePrefix,
                 name,
@@ -76,6 +80,7 @@ local function ScanForBids(msg, name)
                 L["is accepted as the new high bid"]
             ), "RAID")
         else
+            --[R] {rt2} GDKPd : SomeDumbBidder's bid of 20 Gold for [Overcharged Capacitor] is rejected because it is too low!
             SendChatMessage(format("%s %s's %s %d %s %s!",
                 addon.messagePrefix,
                 name,
@@ -88,6 +93,7 @@ local function ScanForBids(msg, name)
             if addon.db.global.activeAuction.highBidder == nil then
                 minBid = addon.db.global.activeAuction.startBid
             end
+            --[W] {rt2} GDKPd : Bid at least 25 Gold on [Overcharged Capacitor] if you are interested! You have 15 seconds remaining!
             SendChatMessage(format("%s %s %d %s %s %s %s 15 %s!",
                 addon.messagePrefix,
                 L["Bid at least"],
@@ -116,6 +122,7 @@ local function StepAuction()
 
         local remainingTime = (addon.db.global.activeAuction.endTime - now)
         if remainingTime == 15 then
+            --[R] {rt2} GDKPd : 15 seconds remaining on [Overcharged Capacitor]! Minimum Bid now 20 Gold!
             SendChatMessage(format("%s 15 %s %s! %s %d %s!",
                 addon.messagePrefix,
                 L["seconds remaining on"],
@@ -125,11 +132,13 @@ local function StepAuction()
                 L["Gold"]
             ), "RAID")
         elseif remainingTime == 10 then
+            --[R] {rt2} GDKPd : 10 seconds remaining!
             SendChatMessage(format("%s 10 %s!",
                 addon.messagePrefix,
                 L["seconds remaining"]
             ), "RAID")
         elseif remainingTime == 5 then
+            --[R] {rt2} GDKPd : 5 seconds remaining!
             SendChatMessage(format("%s 5 %s!",
                 addon.messagePrefix,
                 L["seconds remaining"]
@@ -138,6 +147,7 @@ local function StepAuction()
 
             if addon.db.global.activeAuction.highBidder ~= nil then
                 --Had bids
+                --[R] {rt2} GDKPd : [Overcharged Capacitor] has been sold to SomeBidder for 20 Gold!
                 SendChatMessage(format("%s %s %s %s %s %d %s!",
                     addon.messagePrefix,
                     addon.itemData[addon.db.global.activeAuction.itemID].Link,
@@ -147,12 +157,14 @@ local function StepAuction()
                     addon.db.global.activeAuction.currentBid,
                     L["Gold"]
                 ), "RAID")
+                --[R] {rt2} GDKPd : Pot Total is now 20 Gold!
                 SendChatMessage(format("%s %s %d %s!",
                     addon.messagePrefix,
                     L["Pot Total is now"],
                     99999999, --TODO: PLACEHOLDER VALUE
                     L["Gold"]
                 ), "RAID")
+                --[W] {rt2} GDKPd : Congrats! Please pay {MasterLooter} 20 Gold when you collect [Overcharged Capacitor].
                 SendChatMessage(format("%s %s! %s %s %d %s %s %s.",
                     addon.messagePrefix,
                     L["Congrats"],
