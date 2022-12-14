@@ -63,12 +63,46 @@ function addon.GenerateBidPriceOptions()
                     --    order = 120,
                     --    width = 0.2,
                     --    multiline = true,
-                    --    get = function(info) return addon.db.global.raidRules end,
-                    --    set = function(info, val) addon.db.global.raidRules = strsub(val, 1, 255) end,
+                    --    get = function(info) return addon.db.raidRules end,
+                    --    set = function(info, val) addon.db.raidRules = strsub(val, 1, 255) end,
                     --}
                     --initorder = initorder + 1
                 end
             end
         end
     end
+end
+
+--Extract the variable value from a global UI string, or return false if it is not the correct string
+function addon.ExtractFromGlobalString(GlobalStringLiteral, FormattedString)
+    local extract = FormattedString
+    local prefix = GlobalStringLiteral:gsub("%%s.*", "")
+    local suffix = GlobalStringLiteral:gsub(".*%%s", "")
+    --Check that both what comes before and after the formatted string part is in the message
+    if not strmatch(FormattedString, prefix) or not strmatch(FormattedString, suffix) then
+        return false
+    end
+    --If it is the correct system message, extract the string
+    extract = extract:gsub(prefix, ""):gsub(suffix, "")
+    if addon.debugMenus then
+        print("pre: " .. prefix)
+        print("suf: " .. suffix)
+        print("ext: " .. extract)
+    end
+    return extract
+end
+
+--Check if a string starts with a given pattern
+function addon.StartsWith(str, pattern)
+    return str:sub(1, #pattern) == pattern
+end
+
+--Check if a string ends with a given pattern
+function addon.EndsWith(str, pattern)
+    return pattern == "" or str:sub(- #pattern) == pattern
+end
+
+--Return a stylized string of a number
+function addon.PrintBigNumber(num)
+    return tostring(math.floor(num)):reverse():gsub("(%d%d%d)", "%1,"):gsub(",(%-?)$", "%1"):reverse()
 end

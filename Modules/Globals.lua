@@ -4,7 +4,10 @@ local L = LibStub('AceLocale-3.0'):GetLocale('GDKPd')
 addon.version = GetAddOnMetadata(addonName, "Version")
 addon.systemColor = "ffd900"
 addon.VERSION_PREFIX = "GDKPd.Version"
-addon.messagePrefix = "{rt2} GDKPd:"
+addon.AUCTION_PREFIX_START = "GDKPd.ASTART"
+addon.AUCTION_PREFIX_BID = "GDKPd.ABID"
+addon.AUCTION_PREFIX_END = "GDKPd.AEND"
+addon.messagePrefix = "{rt2} GDKPd :"
 
 
 --Values for supported locales

@@ -29,3 +29,7 @@ Modules/GDKPd.lua
 Modules/CreatorTooltips.lua
 Modules/Minimap.lua
 Modules/Auctioneer.lua
+Modules/Session.lua
+Modules/AutoTrade.lua
+Modules/ActiveAuction.lua
+Modules/StatusWindow.lua

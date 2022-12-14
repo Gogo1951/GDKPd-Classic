@@ -32,7 +32,7 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(...)
         if curMouseOver then
             if addon.GDKPdDevs[curMouseOver] then
                 GameTooltip:AddLine(format("|TInterface\\AddOns\\" ..
-                    addonName .. "\\Images\\GDKPd:16:16:0:0|t %s : %s"
+                    addonName .. "\\Images\\icon64:16:16:0:0|t %s : %s"
                     ,
                     addonName, addon.GDKPdDevs[curMouseOver]))
             end

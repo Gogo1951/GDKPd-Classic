@@ -36,7 +36,6 @@ function addon.BuildGDKPdWindow()
 	GDKPdFrame:Hide()
 	tinsert(UISpecialFrames, "GDKPdFrame")
 
-	GDKPdFrame:SetFrameStrata("DIALOG")
 	GDKPdFrame:SetWidth(WINDOW_WIDTH)
 	GDKPdFrame:SetHeight(WINDOW_HEIGHT)
 	GDKPdFrame:SetPoint("CENTER", UIParent)
@@ -59,6 +58,7 @@ function addon.BuildGDKPdWindow()
 			end
 		end)
 	GDKPdFrame:SetScript("OnShow", function() return end)
+	GDKPdFrame:SetFrameStrata("DIALOG")
 
 	--------
 	--Icon--
@@ -66,11 +66,11 @@ function addon.BuildGDKPdWindow()
 	local icon = GDKPdFrame:CreateTexture("$parentIcon", "OVERLAY", nil, -8)
 	icon:SetSize(60, 60)
 	icon:SetPoint("TOPLEFT", -5, 7)
-	icon:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Images\\GDKPd.tga")
+	icon:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Images\\icon128.tga")
 
 
 
-	GDKPdFrame:SetScale(addon.db.global.UIScale)
+	GDKPdFrame:SetScale(addon.db.UIScale)
 	GDKPdFrame:Show()
 end
 
@@ -100,7 +100,7 @@ end
 function addon.SetupConfig()
 	addon.options = {
 		name = "|TInterface\\AddOns\\" ..
-			addonName .. "\\Images\\GDKPd:16:16:0:4|t  " .. addonName .. " - v" .. tostring(addon.version),
+			addonName .. "\\Images\\icon64:16:16:0:4|t  " .. addonName .. " - v" .. tostring(addon.version),
 		desc = "",
 		descStyle = "inline",
 		handler = addon,
@@ -133,9 +133,9 @@ function addon.SetupConfig()
 						name = L["Enable Mini-Map Icon"],
 						order = 30,
 						width = "full",
-						get = function(info) return addon.db.global.showMinimap end,
+						get = function(info) return addon.db.showMinimap end,
 						set = function(info, val)
-							addon.db.global.showMinimap = val
+							addon.db.showMinimap = val
 							if val == true then
 								addon.icon:Show("GDKPdLDB")
 							else
@@ -155,8 +155,8 @@ function addon.SetupConfig()
 						name = L["Enable GDKPd Info Panel when Master Looter"],
 						order = 60,
 						width = "full",
-						get = function(info) return addon.db.global.showInfoPanel end,
-						set = function(info, val) addon.db.global.showInfoPanel = val end,
+						get = function(info) return addon.db.showInfoPanel end,
+						set = function(info, val) addon.db.showInfoPanel = val end,
 					},
 					spacerdesc2 = { type = "description", name = " ", width = "full", order = 70 },
 					header3 = {
@@ -172,8 +172,8 @@ function addon.SetupConfig()
 						order = 90,
 						width = "1",
 						values = addon.localeLangs,
-						set = function(info, val) addon.db.global.locale = val end,
-						get = function(info) return addon.db.global.locale end,
+						set = function(info, val) addon.db.locale = val end,
+						get = function(info) return addon.db.locale end,
 					},
 					spacerdesc3 = { type = "description", name = " ", width = "full", order = 100 },
 					header4 = {
@@ -188,8 +188,8 @@ function addon.SetupConfig()
 						order = 120,
 						width = 2,
 						multiline = true,
-						get = function(info) return addon.db.global.raidRules end,
-						set = function(info, val) addon.db.global.raidRules = strsub(val, 1, 255) end,
+						get = function(info) return addon.db.raidRules end,
+						set = function(info, val) addon.db.raidRules = strsub(val, 1, 255) end,
 					},
 					desc4 = {
 						type = "description",
@@ -242,8 +242,8 @@ function addon.SetupConfig()
 							[1] = ITEM_QUALITY_COLORS[1].hex .. L["Common"],
 							[0] = ITEM_QUALITY_COLORS[0].hex .. L["Poor"],
 						},
-						set = function(info, val) addon.db.global.lootLogThreshold = val end,
-						get = function(info) return addon.db.global.lootLogThreshold end,
+						set = function(info, val) addon.db.lootLogThreshold = val end,
+						get = function(info) return addon.db.lootLogThreshold end,
 					},
 					spacerdesc1 = { type = "description", name = " ", width = "full", order = 40 },
 					header2 = {
@@ -257,8 +257,8 @@ function addon.SetupConfig()
 						name = L["Save Loot History Between Sessions"],
 						order = 60,
 						width = "full",
-						get = function(info) return addon.db.global.saveLootHistory end,
-						set = function(info, val) addon.db.global.saveLootHistory = val end,
+						get = function(info) return addon.db.saveLootHistory end,
+						set = function(info, val) addon.db.saveLootHistory = val end,
 					},
 				},
 			},
@@ -290,8 +290,8 @@ function addon.SetupConfig()
 						order = 30,
 						width = 1.6,
 						values = addon.timerOptions,
-						set = function(info, val) addon.db.global.auctionDuration = val end,
-						get = function(info) return addon.db.global.auctionDuration end,
+						set = function(info, val) addon.db.auctionDuration = val end,
+						get = function(info) return addon.db.auctionDuration end,
 					},
 					spacerdesc1 = { type = "description", name = " ", width = "full", order = 40 },
 					header2 = {
@@ -307,8 +307,8 @@ function addon.SetupConfig()
 						order = 60,
 						width = 1.6,
 						values = addon.timerOptions,
-						set = function(info, val) addon.db.global.auctionCountdown = val end,
-						get = function(info) return addon.db.global.auctionCountdown end,
+						set = function(info, val) addon.db.auctionCountdown = val end,
+						get = function(info) return addon.db.auctionCountdown end,
 					},
 					spacerdesc2 = { type = "description", name = " ", width = "full", order = 70 },
 					header3 = {
@@ -326,8 +326,8 @@ function addon.SetupConfig()
 						order = 90,
 						width = 1.6,
 						values = addon.timerOptions,
-						set = function(info, val) addon.db.global.auctionDelay = val end,
-						get = function(info) return addon.db.global.auctionDelay end,
+						set = function(info, val) addon.db.auctionDelay = val end,
+						get = function(info) return addon.db.auctionDelay end,
 						hidden = true,
 						disabled = true,
 					},
@@ -391,8 +391,8 @@ function addon.SetupConfig()
 							[1] = L["Enable Trade Announce when Master Looter"],
 							[2] = L["Enable Trade Announce"],
 						},
-						set = function(info, val) addon.db.global.tradeAnnounce = val end,
-						get = function(info) return addon.db.global.tradeAnnounce end,
+						set = function(info, val) addon.db.tradeAnnounce = val end,
+						get = function(info) return addon.db.tradeAnnounce end,
 					},
 					spacerdesc1 = { type = "description", name = " ", width = "full", order = 40 },
 					desc4 = {
@@ -506,11 +506,13 @@ function addon:OnInitialize()
 			activeSession = nil,
 			activeAuction = nil,
 			historicalSessions = {},
+			buyerHistory = {},
 		}
 	}
 
-	addon.db = LibStub("AceDB-3.0"):New("GDKPdDB", defaults)
-	addon.db.global.configVer = addon.version
+	addon.savedvars = LibStub("AceDB-3.0"):New("GDKPdDB", defaults)
+	addon.db = addon.savedvars.global --Shorter alias, since we only have global vars
+	addon.db.configVer = addon.version
 
 	addon.debugMenus = false
 
@@ -530,9 +532,12 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ENTERING_WORLD", function(...)
 		addon.SetupConfig()
 		local event, isInitialLogin, isReloadingUi = ...
-		C_Timer.After(3, function()
+		C_Timer.After(1, function()
 			--Send version check on login
 			C_ChatInfo.RegisterAddonMessagePrefix(addon.VERSION_PREFIX)
+			C_ChatInfo.RegisterAddonMessagePrefix(addon.AUCTION_PREFIX_START)
+			C_ChatInfo.RegisterAddonMessagePrefix(addon.AUCTION_PREFIX_END)
+			C_ChatInfo.RegisterAddonMessagePrefix(addon.AUCTION_PREFIX_BID)
 			C_ChatInfo.SendAddonMessage(addon.VERSION_PREFIX, "v" .. addon.version, "YELL")
 		end)
 	end)
@@ -554,8 +559,8 @@ function addon:OnEnable()
 		local _, prefix, msg = ...
 		if prefix == addon.VERSION_PREFIX then
 			local version = gsub(msg, "v", "")
-			if version > addon.db.global.highestSeenVersion then
-				addon.db.global.highestSeenVersion = version
+			if version > addon.db.highestSeenVersion then
+				addon.db.highestSeenVersion = version
 			end
 		end
 	end)
@@ -563,9 +568,9 @@ function addon:OnEnable()
 	--Send version check to players joining group/raid
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", function(...)
 		local event, msg = ...
-		if strmatch(msg, L["has joined the raid group"]) then
+		if addon.ExtractFromGlobalString(ERR_RAID_MEMBER_ADDED_S, msg) then
 			C_ChatInfo.SendAddonMessage(addon.VERSION_PREFIX, "v" .. addon.version, "RAID")
-		elseif strmatch(msg, L["joins the party"]) then
+		elseif addon.ExtractFromGlobalString(ERR_JOINED_GROUP_S, msg) then
 			C_ChatInfo.SendAddonMessage(addon.VERSION_PREFIX, "v" .. addon.version, "PARTY")
 		end
 	end)

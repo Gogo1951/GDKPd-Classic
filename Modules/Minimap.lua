@@ -6,9 +6,11 @@ local Minimap = addon:NewModule("GDKPdMinimap", "AceEvent-3.0")
 addon.LDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     type = "data source",
     text = addonName,
-    icon = "Interface\\AddOns\\" .. addonName .. "\\Images\\GDKPd.tga",
+    icon = "Interface\\AddOns\\" .. addonName .. "\\Images\\icon64.tga",
     OnClick = function(self, button, down)
-        if button == "LeftButton" then
+        if IsShiftKeyDown() then
+            addon.BuildStatusWindow()
+        elseif button == "LeftButton" then
             addon.BuildGDKPdWindow()
         elseif button == "RightButton" then
             addon.OpenConfig()
@@ -26,8 +28,9 @@ addon.LDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
             " |cffffffff" ..
             L["or"] .. "|r /gdkpd |cffffffff: " .. addonName .. "|r ")
         tooltip:AddLine(L["RightClick"] .. " |cffffffff: " .. L["Open GDKPd Settings"] .. "|r ")
+        tooltip:AddLine(L["Shift+Click"] .. " |cffffffff: " .. L["Toggle GDKPd Status Panel"] .. "|r ")
         --Version Check
-        if addon.version < addon.db.global.highestSeenVersion then
+        if addon.version < addon.db.highestSeenVersion then
             tooltip:AddLine(" ")
             tooltip:AddLine("|cff8000FF" .. L["PLEASE UPDATE YOUR ADD-ONS ASAP!"] .. "|r")
             tooltip:AddLine("|cff8000FF" .. L["GDKPd IS OUT OF DATE!"] .. "|r")
@@ -39,12 +42,12 @@ addon.LDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
 function Minimap:OnInitialize()
 
     addon.icon = LibStub("LibDBIcon-1.0")
-    addon.icon:Register("GDKPdLDB", addon.LDB, addon.db.global or defaults.global)
+    addon.icon:Register("GDKPdLDB", addon.LDB, addon.db or defaults.global)
 end
 
 function Minimap:OnEnable()
     self:RegisterEvent("PLAYER_ENTERING_WORLD", function(...)
-        if addon.db.global.showMinimap == false then
+        if addon.db.showMinimap == false then
             addon.icon:Hide("GDKPdLDB")
         end
     end)

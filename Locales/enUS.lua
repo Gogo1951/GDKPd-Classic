@@ -7,10 +7,12 @@ local L = LibStub('AceLocale-3.0'):NewLocale('GDKPd', 'enUS', true)
 L["Automate Your GDKP Auctions, Bids, & Payouts"] = true
 L["Click"] = true
 L["RightClick"] = true
+L["Shift+Click"] = true
 L["or"] = true
 L["Open GDKPd Settings"] = true
 L["PLEASE UPDATE YOUR ADD-ONS ASAP!"] = true
 L["GDKPd IS OUT OF DATE!"] = true
+L["Toggle GDKPd Status Panel"] = true
 
 --Settings Tabs
 L["General Settings"] = true
@@ -76,16 +78,34 @@ L["Congrats"] = true
 L["Please pay"] = true
 L["when you collect"] = true
 L["Pot Total is now"] = true
-L[""] = true
-L[""] = true
-L[""] = true
+L["Auction of"] = true
+L["has ended and recieved no bids"] = true
+
+--Session
+L["Do you want to start a new session?"] = true
+
+--Active Auction
+L["Min Bid"] = true
+L["with"] = true
+L["Increments"] = true
+L["Auto Bid"] = true
+L["Admin : Extend Auction 15 Seconds"] = true
+L["Admin : Cancel Last Bid"] = true
+L["Admin : Cancel Auction"] = true
+
+--Status Window
+L["Pot Size"] = true
+L["Pending Auctions"] = true
+L["Raid Rules"] = true
+L["Payment Rules"] = true
+L["GDKPd Board"] = true
+L["GDKPd Options"] = true
+L["WARNING! ITEMS ABOUT TO EXPIRE"] = true
 
 -------------------
 --SPECIAL STRINGS--
 -------------------
-
---Needs formatting
-
---Compared to Blizzard values
-L["has joined the raid group"] = true
-L["joins the party"] = true
+L[""] = true
+L[""] = true
+L[""] = true
+L[""] = true
