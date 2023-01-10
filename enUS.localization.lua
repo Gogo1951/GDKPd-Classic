@@ -1,7 +1,7 @@
 local debug = false
 --[===[@debug@
 debug=true
---@end-debug@]===]
+--@end-debug@]==]]===]
 
 local L = LibStub("AceLocale-3.0"):NewLocale("GDKPd", "enUS", true, debug)
 L["Allow multiple simultanous auctions"] = true
