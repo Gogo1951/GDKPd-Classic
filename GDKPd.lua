@@ -1918,6 +1918,12 @@ export.toggleBN:SetPoint("LEFT", export.toggleBB, "RIGHT")
 export.toggleBN:SetText("Battle.net forums")
 export.toggleBN:SetScript("OnClick", function() export:SetType('BN') end)
 
+export.toggleCSV = CreateFrame("Button", nil, export, "UIPanelButtonTemplate")
+export.toggleCSV:SetSize(150, 20)
+export.toggleCSV:SetPoint("TOP", export.toggleBB, "BOTTOM")
+export.toggleCSV:SetText("CSV")
+export.toggleCSV:SetScript("OnClick", function() export:SetType('CSV') end)
+
 function export:Update()
 	local text = self.header
 	for _, aucdata in ipairs(self.data) do
@@ -1932,6 +1938,9 @@ function export:Update()
 			elseif self.exportType == "BN" then
 				text = text ..
 					"\n[item=\"" .. aucdata.item:match("|Hitem:(%d+):") .. "\" /]: " .. aucdata.name .. " (" .. aucdata.bid .. " gold)"
+			elseif self.exportType == "CSV" then
+				text = text ..
+					"\n" .. aucdata.item:match("(|h.+|h)") .. "," .. aucdata.name .. "," .. aucdata.bid
 			else
 				text = text ..
 					"\n=HYPERLINK(\"http://classic.wowhead.com/item=" ..
