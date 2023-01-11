@@ -26,7 +26,7 @@ local DEBUGFORCEVERSION
 
 --[===[@debug@
 DEBUGFORCEVERSION="2.0.0"
---@end-debug@]==]]===]
+--@end-debug@]===]
 -- fetch locale data
 local L = LibStub("AceLocale-3.0"):GetLocale("GDKPd")
 -- versioning info
@@ -1943,7 +1943,9 @@ function export:Update()
 					"\n" .. aucdata.item:match("(|h.+|h)") .. "," .. aucdata.name .. "," .. aucdata.bid
 			else
 				text = text ..
-					"\n" .. (aucdata.item:match("|Hitem:(%d+):")) .."," .. aucdata.item:match("(|h.+|h)") .. "," .. aucdata.name .. "," .. aucdata.bid
+					"\n=HYPERLINK(\"http://classic.wowhead.com/item=" ..
+					(aucdata.item:match("|Hitem:(%d+):")) ..
+					"\",\"" .. aucdata.item:match("(|h.+|h)") .. "\")\t" .. aucdata.name .. "\t" .. aucdata.bid
 			end
 		else
 			text = text .. "\n" .. L["Manual adjustment"] .. ": " .. (aucdata > 0 and "+" or "") .. aucdata .. " gold"
