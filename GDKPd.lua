@@ -3430,7 +3430,6 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 					self.curAuction.timeRemains = math.max(self.opt.auctionTimerRefresh, self.curAuction.timeRemains)
 				else
-					print(self.opt.remindInvalidBid)
 					if self.opt.remindInvalidBid then 
 						SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
 					end		
