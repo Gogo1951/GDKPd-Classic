@@ -163,3 +163,18 @@ L[ [=[You have selected the following pot:
 What do you want to do with this pot?]=] ] = [=[你選擇了以下的拍賣收入:
 %s,日期 %s,數量 %d 金.
 你想如何處理這些拍賣收入?]=]
+
+L["Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."] = "開始拍賣 %s. 請利用團隊頻道進行競拍, 起拍價為 %d金, 每口叫價 %d金."
+L["Auction cancelled."] = "拍賣取消"
+
+L["Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"] = "開始拍賣 %s. 請利用團隊頻道喊出以 '[物品] 1000' 進行競拍, 起拍價為 %d金, 每口叫價 %d金. 拍賣時間: %d/%d"
+L["Auction cancelled for %s."] = "拍賣取消 - %s"
+L["[Caution] "] = "[警告]"
+L["[Caution] %d seconds remaining for item %s!"] = "[警告] 物品競拍時間剩下 %d 秒 %s!"
+L["Auction finished for %s. No bids recieved."] = "拍賣結束 %s - 流拍."
+L["Auction finished for %s. Winner: %s. %s."] = "拍賣結束 %s - 贏家: %s. %s."
+L["New highest bidder on %s: %s (%d gold)"] = "新的最高競拍者 %s - %s (%d 金)"
+
+L["Invalid. %s please bid at least %d gold on %s."] = "%s 出價無效. 請以不低於 %d 金的價格以競拍 %s"
+L["New highest bidder: %s (%d gold)"] = "新的最高競拍者- %s (%d 金)"
+L["[Caution] %d seconds remaining!"] = "[警告] 物品競拍時間剩下 %d 秒!"
