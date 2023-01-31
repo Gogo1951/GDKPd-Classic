@@ -26,7 +26,7 @@ local DEBUGFORCEVERSION
 
 --[===[@debug@
 DEBUGFORCEVERSION="2.0.0"
---@end-debug@]===]
+--@end-debug@]==]]===]
 -- fetch locale data
 local L = LibStub("AceLocale-3.0"):GetLocale("GDKPd")
 -- versioning info
@@ -413,7 +413,8 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
 					end
 				else
-					SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
+					-- SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
+					SendChatMessage(L["[Caution] %d seconds remaining!"]:format(curPot * self.opt.countdownTimerJump), "RAID")
 				end
 		end
 		if self.curAuction.timeRemains <= 0 then
@@ -441,9 +442,11 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
 						end
 					else
-						SendChatMessage("[Caution] " ..
-					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
-					"!", "RAID")				
+						SendChatMessage(L["[Caution] %d seconds remaining for item %s!"]:format(
+					(curPot * self.opt.countdownTimerJump), item), "RAID")				
+						--SendChatMessage(L["[Caution] %d seconds remaining for item"] ..
+					--(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
+					--"!", "RAID")				
 					end
 			end
 			if aucdata.timeRemains <= 0 then
@@ -519,7 +522,7 @@ status.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header
 status.header:SetSize(133, 34)
 status.header.text = status.header:CreateFontString()
 status.header.text:SetPoint("TOP", 0, -7)
-status.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+status.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 status.header.text:SetTextColor(1, 1, 1)
 status.header.text:SetText("GDKPd")
 status.header:SetMovable(true)
@@ -536,7 +539,7 @@ status:SetScript("OnShow", function(self)
 	self:UpdateSize()
 end)
 status.text = status:CreateFontString()
-status.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+status.text:SetFont(GameFontNormal:GetFont(), 15, "")
 status.text:SetTextColor(1, 1, 1)
 status.text:SetPoint("TOPLEFT", 15, -15)
 status.text:SetJustifyH("LEFT")
@@ -623,7 +626,7 @@ status.itemhistory:SetScript("OnClick", function()
 	GDKPd.history:Show()
 end)
 status.announcetext = status:CreateFontString()
-status.announcetext:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+status.announcetext:SetFont(GameFontNormal:GetFont(), 15, "")
 status.announcetext:SetTextColor(1, 1, 1)
 status.announcetext:SetPoint("TOPLEFT", status.itemhistory, "BOTTOMLEFT", 0, -5)
 status.announcetext:SetJustifyH("LEFT")
@@ -720,7 +723,7 @@ history.header:SetSize(133, 34)
 history.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 history.header.text = history.header:CreateFontString()
 history.header.text:SetPoint("TOP", 0, -7)
-history.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+history.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 history.header.text:SetTextColor(1, 1, 1)
 history.header.text:SetText(L["History"])
 history.header:SetMovable(true)
@@ -749,19 +752,19 @@ history.entries = setmetatable({}, { __index = function(t, v)
 	end
 
 	f.date = f:CreateFontString()
-	f.date:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.date:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.date:SetTextColor(1, 1, 1)
 	f.date:SetPoint("TOPLEFT")
 	f.date:SetWidth(55)
 	f.amount = f:CreateFontString()
-	f.amount:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetPoint("TOPLEFT", f.date, "TOPRIGHT", 5, 0)
 	f.amount:SetPoint("BOTTOMLEFT", f.date, "BOTTOMRIGHT", 5, 0)
 	f.amount:SetWidth(40)
 	f.amount:SetJustifyH("RIGHT")
 	f.note = f:CreateFontString()
-	f.note:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.note:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.note:SetTextColor(1, 1, 1)
 	f.note:SetPoint("BOTTOMLEFT", f.amount, "BOTTOMRIGHT", 5, 0)
 	f.note:SetPoint("TOPRIGHT")
@@ -878,7 +881,7 @@ itemsettings.header:SetSize(133, 34)
 itemsettings.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 itemsettings.header.text = itemsettings.header:CreateFontString()
 itemsettings.header.text:SetPoint("TOP", 0, -7)
-itemsettings.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+itemsettings.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 itemsettings.header.text:SetTextColor(1, 1, 1)
 itemsettings.header.text:SetText(L["Item settings"])
 itemsettings.header:SetMovable(true)
@@ -898,19 +901,19 @@ itemsettings.thead:SetPoint("TOPLEFT", 15, -15)
 itemsettings.thead:SetPoint("TOPRIGHT", -15, -15)
 itemsettings.thead:SetHeight(15)
 itemsettings.thead.item = itemsettings.thead:CreateFontString()
-itemsettings.thead.item:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemsettings.thead.item:SetFont(GameFontNormal:GetFont(), 15, "")
 itemsettings.thead.item:SetTextColor(1, 0.82, 0)
 --itemsettings.thead.item:SetText(L["Itm"])
 itemsettings.thead.item:SetPoint("LEFT")
 itemsettings.thead.item:SetWidth(15)
 itemsettings.thead.startbid = itemsettings.thead:CreateFontString()
-itemsettings.thead.startbid:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemsettings.thead.startbid:SetFont(GameFontNormal:GetFont(), 15)
 itemsettings.thead.startbid:SetTextColor(1, 0.82, 0)
 itemsettings.thead.startbid:SetText(L["Starting bid"])
 itemsettings.thead.startbid:SetPoint("LEFT", itemsettings.thead.item, "RIGHT")
 itemsettings.thead.startbid:SetWidth(102.5)
 itemsettings.thead.minincre = itemsettings.thead:CreateFontString()
-itemsettings.thead.minincre:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemsettings.thead.minincre:SetFont(GameFontNormal:GetFont(), 15, "")
 itemsettings.thead.minincre:SetTextColor(1, 0.82, 0)
 itemsettings.thead.minincre:SetText(L["Minimum increment"])
 itemsettings.thead.minincre:SetPoint("LEFT", itemsettings.thead.startbid, "RIGHT")
@@ -997,7 +1000,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end)
 	f.minBid:SetScript("OnEscapePressed",
 		function(self) self:SetNumber(GDKPd.opt.customItemSettings[f.itemID].minBid) self:ClearFocus() end)
-	f.minBid:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.minBid:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.minBid:SetTextColor(1, 1, 1)
 	f.minBid:SetPoint("TOPLEFT", f.itemicon, "TOPRIGHT")
 	f.minBid:SetPoint("BOTTOMLEFT", f.itemicon, "BOTTOMRIGHT")
@@ -1014,7 +1017,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end
 	end)
 	f.minBid.g = f:CreateFontString()
-	f.minBid.g:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.minBid.g:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.minBid.g:SetTextColor(1, 0.82, 0)
 	f.minBid.g:SetText("g")
 	f.minBid.g:SetPoint("TOPRIGHT", f.itemicon, "TOPRIGHT", 102.5, 0)
@@ -1040,7 +1043,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 			else self:SetText("") end
 			self:ClearFocus()
 		end)
-	f.minIncrement:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.minIncrement:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.minIncrement:SetTextColor(1, 1, 1)
 	f.minIncrement:SetPoint("TOPLEFT", f.minBid.g, "TOPRIGHT")
 	f.minIncrement:SetPoint("BOTTOMLEFT", f.minBid.g, "BOTTOMRIGHT")
@@ -1056,7 +1059,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end
 	end)
 	f.minIncrement.g = f:CreateFontString()
-	f.minIncrement.g:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.minIncrement.g:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.minIncrement.g:SetTextColor(1, 0.82, 0)
 	f.minIncrement.g:SetText("g")
 	f.minIncrement.g:SetPoint("TOPRIGHT", f.minBid.g, "TOPRIGHT", 102.5, 0)
@@ -1138,7 +1141,7 @@ itemlevels.header:SetSize(133, 34)
 itemlevels.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 itemlevels.header.text = itemlevels.header:CreateFontString()
 itemlevels.header.text:SetPoint("TOP", 0, -7)
-itemlevels.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+itemlevels.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 itemlevels.header.text:SetTextColor(1, 1, 1)
 itemlevels.header.text:SetText(L["iLvL ranges"])
 itemlevels.header:SetMovable(true)
@@ -1158,25 +1161,25 @@ itemlevels.thead:SetPoint("TOPLEFT", 15, -15)
 itemlevels.thead:SetPoint("TOPRIGHT", -15, -15)
 itemlevels.thead:SetHeight(15)
 itemlevels.thead.min = itemlevels.thead:CreateFontString()
-itemlevels.thead.min:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemlevels.thead.min:SetFont(GameFontNormal:GetFont(), 15, "")
 itemlevels.thead.min:SetTextColor(1, 0.82, 0)
 itemlevels.thead.min:SetPoint("LEFT")
 itemlevels.thead.min:SetWidth(25)
 itemlevels.thead.min:SetText("Min")
 itemlevels.thead.max = itemlevels.thead:CreateFontString()
-itemlevels.thead.max:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemlevels.thead.max:SetFont(GameFontNormal:GetFont(), 15, "")
 itemlevels.thead.max:SetTextColor(1, 0.82, 0)
 itemlevels.thead.max:SetPoint("LEFT", itemlevels.thead.min, "RIGHT", 5, 0)
 itemlevels.thead.max:SetWidth(25)
 itemlevels.thead.max:SetText("Max")
 itemlevels.thead.minbid = itemlevels.thead:CreateFontString()
-itemlevels.thead.minbid:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemlevels.thead.minbid:SetFont(GameFontNormal:GetFont(), 15, "")
 itemlevels.thead.minbid:SetTextColor(1, 0.82, 0)
 itemlevels.thead.minbid:SetPoint("LEFT", itemlevels.thead.max, "RIGHT", 5, 0)
 itemlevels.thead.minbid:SetWidth(60)
 itemlevels.thead.minbid:SetText(L["Starting bid"])
 itemlevels.thead.mininc = itemlevels.thead:CreateFontString()
-itemlevels.thead.mininc:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+itemlevels.thead.mininc:SetFont(GameFontNormal:GetFont(), 15, "")
 itemlevels.thead.mininc:SetTextColor(1, 0.82, 0)
 itemlevels.thead.mininc:SetPoint("LEFT", itemlevels.thead.minbid, "RIGHT", 5, 0)
 itemlevels.thead.mininc:SetWidth(80)
@@ -1269,25 +1272,25 @@ itemlevels.entries = setmetatable({}, { __index = function(t, v)
 	end
 	f:SetHeight(15)
 	f.min = f:CreateFontString()
-	f.min:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.min:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.min:SetTextColor(1, 1, 1)
 	f.min:SetPoint("LEFT")
 	f.min:SetWidth(25)
 	f.min:SetJustifyH("RIGHT")
 	f.max = f:CreateFontString()
-	f.max:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.max:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.max:SetTextColor(1, 1, 1)
 	f.max:SetPoint("LEFT", f.min, "RIGHT", 5, 0)
 	f.max:SetWidth(25)
 	f.max:SetJustifyH("RIGHT")
 	f.minbid = f:CreateFontString()
-	f.minbid:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.minbid:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.minbid:SetTextColor(1, 1, 1)
 	f.minbid:SetPoint("LEFT", f.max, "RIGHT", 5, 0)
 	f.minbid:SetWidth(60)
 	f.minbid:SetJustifyH("RIGHT")
 	f.mininc = f:CreateFontString()
-	f.mininc:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.mininc:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.mininc:SetTextColor(1, 1, 1)
 	f.mininc:SetPoint("LEFT", f.minbid, "RIGHT", 5, 0)
 	f.mininc:SetWidth(80)
@@ -1352,7 +1355,7 @@ version.header:SetSize(133, 34)
 version.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 version.header.text = version.header:CreateFontString()
 version.header.text:SetPoint("TOP", 0, -7)
-version.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+version.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 version.header.text:SetTextColor(1, 1, 1)
 version.header.text:SetText(L["Versions"])
 version.header:SetMovable(true)
@@ -1381,13 +1384,13 @@ version.entries = setmetatable({}, { __index = function(t, v)
 	end
 
 	f.name = f:CreateFontString()
-	f.name:SetFont("Fonts\\FRIZQT__.TTF", 8, "OUTLINE")
+	f.name:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetWidth(110)
 	f.name:SetJustifyH("LEFT")
 	f.version = f:CreateFontString()
-	f.version:SetFont("Fonts\\FRIZQT__.TTF", 8, "OUTLINE")
+	f.version:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
 	f.version:SetPoint("BOTTOMLEFT", f.name, "BOTTOMRIGHT", 5, 0)
 	f.version:SetPoint("TOPRIGHT")
 	f.version:SetJustifyH("LEFT")
@@ -1546,7 +1549,7 @@ balance.header:SetSize(133, 34)
 balance.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 balance.header.text = balance.header:CreateFontString()
 balance.header.text:SetPoint("TOP", 0, -7)
-balance.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+balance.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 balance.header.text:SetTextColor(1, 1, 1)
 balance.header.text:SetText(L["Balance"])
 balance.header:SetMovable(true)
@@ -1582,12 +1585,12 @@ balance.entries = setmetatable({}, { __index = function(t, v)
 	f.name = f:CreateFontString()
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetPoint("BOTTOMLEFT")
-	f.name:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.name:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetJustifyH("LEFT")
 	f.amount = f:CreateFontString()
 	f.amount:SetPoint("TOPLEFT", f.name, "TOPRIGHT", 5, 0)
-	f.amount:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetJustifyH("RIGHT")
 	f.add = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
@@ -1729,7 +1732,7 @@ playerBalance.header:SetSize(133, 34)
 playerBalance.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 playerBalance.header.text = playerBalance.header:CreateFontString()
 playerBalance.header.text:SetPoint("TOP", 0, -7)
-playerBalance.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+playerBalance.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 playerBalance.header.text:SetTextColor(1, 1, 1)
 playerBalance.header.text:SetText(L["Player balance"])
 playerBalance.header:SetMovable(true)
@@ -1767,12 +1770,12 @@ playerBalance.entries = setmetatable({}, { __index = function(t, v)
 	f.name = f:CreateFontString()
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetPoint("BOTTOMLEFT")
-	f.name:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.name:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetJustifyH("LEFT")
 	f.amount = f:CreateFontString()
 	f.amount:SetPoint("TOPLEFT", f.name, "TOPRIGHT", 5, 0)
-	f.amount:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetJustifyH("RIGHT")
 	f.amount:SetPoint("BOTTOMRIGHT")
@@ -1854,7 +1857,7 @@ export.header:SetSize(133, 34)
 export.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 export.header.text = export.header:CreateFontString()
 export.header.text:SetPoint("TOP", 0, -7)
-export.header.text:SetFont("Fonts\\FRIZQT__.TTF", 8, "")
+export.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
 export.header.text:SetTextColor(1, 1, 1)
 export.header.text:SetText(L["Pot export"])
 export.header:SetMovable(true)
@@ -1868,14 +1871,14 @@ export.header:SetPoint("TOP", history, "BOTTOM", 0, -10)
 export.box = CreateFrame("EditBox", nil, export)
 export.box:SetMultiLine(true)
 export.box:SetAutoFocus(false)
-export.box:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+export.box:SetFont(GameFontNormal:GetFont(), 15, "")
 export.box:SetPoint("TOP", export.header, "TOP", 0, -21)
 export.box:SetJustifyH("LEFT")
 export.box:SetWidth(50)
 do
 	local st = export.box.SetText
 	local dummy_text = UIParent:CreateFontString()
-	dummy_text:SetFont("Fonts\\FRIZQT__.TTF", 12, "")
+	dummy_text:SetFont(GameFontNormal:GetFont(), 15, "")
 	function export.box:SetText(text)
 		dummy_text:SetText(text)
 		self:SetWidth(dummy_text:GetStringWidth())
@@ -2096,6 +2099,10 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		SendChatMessage(("Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+			
+		SendChatOtherLangangueMessage(L["Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."]:
+			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
+			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		GDKPd.curAuction.item = item
 		GDKPd.curAuction.curBid = (minbid - increment)
 		GDKPd.curAuction.increment = increment
@@ -2105,6 +2112,10 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		-- new code
 		SendChatMessage((
 			"Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"):
+			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
+			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+		SendChatOtherLangangueMessage((
+			L["Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"]):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		local aucTable = emptytable()
@@ -2130,6 +2141,11 @@ function GDKPd:RevertHighestBid(link)
 		SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(link, aucdata.bidders[1].bidderName,
 			aucdata.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+		
+		SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(link, aucdata.bidders[1].bidderName,
+			aucdata.bidders[1].bidAmount),
+			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+			
 		-- fix name-to-index assigns
 		for num, t in ipairs(aucdata.bidders) do
 			aucdata.bidders[t.bidderName] = num
@@ -2142,6 +2158,9 @@ function GDKPd:RevertHighestBid(link)
 		self.curAuction.bidders[self.curAuction.bidders[1].bidderName] = nil
 		tremove(self.curAuction.bidders, 1)
 		SendChatMessage(("New highest bidder: %s (%d gold)"):format(self.curAuction.bidders[1].bidderName,
+			self.curAuction.bidders[1].bidAmount),
+			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+		SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(self.curAuction.bidders[1].bidderName,
 			self.curAuction.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		for num, t in ipairs(self.curAuction.bidders) do
@@ -2159,9 +2178,13 @@ function GDKPd:CancelAuction(link)
 		if not aucdata then return end
 		SendChatMessage(("Auction cancelled for %s."):format(link),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+		SendChatOtherLangangueMessage(L[("Auction cancelled for %s.")]:format(link),
+			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		self.curAuctions[link] = nil
 	else
 		SendChatMessage("Auction cancelled.",
+			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+		SendChatOtherLangangueMessage(L["Auction cancelled."],
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		table.wipe(self.curAuction)
 		if self.auctionList[1] then
@@ -2196,6 +2219,8 @@ function GDKPd:FinishAuction(link)
 				paymentString = paymentString:format(remAmount)
 				SendChatMessage(("Auction finished for %s. Winner: %s. %s."):format(link, aucdata.bidders[1].bidderName,
 					paymentString), "RAID")
+				SendChatOtherLangangueMessage(L["Auction finished for %s. Winner: %s. %s."]:format(link, aucdata.bidders[1].bidderName,
+					paymentString), "RAID")
 				GDKPd_PotData.potAmount = (GDKPd_PotData.potAmount or 0) + remAmount
 				GDKPd_PotData.playerBalance[aucdata.bidders[1].bidderName] = GDKPd_PotData.playerBalance[
 					aucdata.bidders[1].bidderName] - remAmount
@@ -2225,6 +2250,7 @@ function GDKPd:FinishAuction(link)
 				end
 			else
 				SendChatMessage(("Auction finished for %s. No bids recieved."):format(link), "RAID")
+				SendChatOtherLangangueMessage(L["Auction finished for %s. No bids recieved."]:format(link), "RAID")
 			end
 			aucdata:Release()
 		end
@@ -2356,7 +2382,7 @@ function GDKPd:GetUnoccupiedFrame()
 		c = c + 1
 	end
 	local f = CreateFrame("Frame", "GDKPdBidFrame" .. c, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-	f:SetSize(300, 60)
+	f:SetSize(300, 120)
 	f:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		tileSize = 16,
@@ -2379,24 +2405,24 @@ function GDKPd:GetUnoccupiedFrame()
 	f.icon:SetTexture(1, 1, 1)
 	f.icon:SetPoint("TOPLEFT", 10, -10)
 	f.itemstring = f:CreateFontString()
-	f.itemstring:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+	f.itemstring:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
 	f.itemstring:SetTextColor(1, 1, 1)
 	f.itemstring:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 5, 0)
 	f.itemstring:SetWidth(160)
 	f.itemstring:SetWordWrap(false)
 	f.itemstring:SetJustifyH("LEFT")
 	f.curbid = f:CreateFontString()
-	f.curbid:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.curbid:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.curbid:SetTextColor(1, 1, 1)
 	f.curbid:SetPoint("TOPLEFT", f.itemstring, "BOTTOMLEFT", 0, -5)
 	f.curbid:Hide()
 	f.highestbid = f:CreateFontString()
-	f.highestbid:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+	f.highestbid:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
 	f.highestbid:SetTextColor(0, 0.8, 0)
 	f.highestbid:SetPoint("TOPLEFT", f.curbid, "BOTTOMLEFT", 0, -5)
 	f.highestbid:SetText("You are the top bidder!")
 	f.highestbidder = f:CreateFontString()
-	f.highestbidder:SetFont("Fonts\\FRIZQT__.TTF", 10, "")
+	f.highestbidder:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.highestbidder:SetTextColor(1, 1, 1)
 	f.highestbidder:SetPoint("TOPLEFT", f.curbid, "BOTTOMLEFT", 0, -5)
 	f.timer = CreateFrame("Cooldown", nil, f)
@@ -2420,7 +2446,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.timer.text:SetText(math.ceil(timeRemain))
 	end)
 	f.timer.text = f.timer:CreateFontString()
-	f.timer.text:SetFont("Fonts\\FRIZQT__.TTF", GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
+	f.timer.text:SetFont(GameFontNormal:GetFont(), GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
 		"OUTLINE")
 	f.timer.text:SetAllPoints()
 	f.timer.text:Hide()
@@ -2468,8 +2494,8 @@ function GDKPd:GetUnoccupiedFrame()
 	end)
 	f.bidbox:SetBackdrop({ bgFile = "Interface\\ChatFrame\\UI-ChatInputBorder", tile = false })
 	f.bidbox:SetTextInsets(5, 5, 2, 2)
-	f.bidbox:SetSize(40, 16)
-	f.bidbox:SetFont("Fonts\\FRIZQT__.TTF", 9, "")
+	f.bidbox:SetSize(60, 16)
+	f.bidbox:SetFont(GameFontNormal:GetFont(), 15, "")
 	f.bidbox:SetAutoFocus(false)
 	f.bidbox:SetPoint("LEFT", f.curbid, "RIGHT", 5, 0)
 	f.bidbox:SetJustifyH("RIGHT")
@@ -2634,9 +2660,9 @@ function GDKPd:GetUnoccupiedFrame()
 	f.isActive = false
 	function f:UpdateSize()
 		if (self.bigHide:IsShown() or self.cancelAuction:IsShown()) then
-			self:SetHeight(100)
+			self:SetHeight(120)
 		else
-			self:SetHeight(60)
+			self:SetHeight(120)
 		end
 	end
 
@@ -3273,7 +3299,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 		LibStub("AceConfig-3.0"):RegisterOptionsTable("GDKPd", self.options)
 		SlashCmdList["GDKPD"] = function(input)
 			local cmd, link = input:match("(%S+)%s+(|c........|Hitem:.+|r)")
-			if (cmd and cmd == "auction") and link then
+			if (cmd and (cmd == "auction" or cmd == "a") ) and link then
 				if self:PlayerIsML((UnitName("player")), true) then
 					for itemLink in string.gmatch(link, "|c........|Hitem:.-|r") do
 						local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
@@ -3400,10 +3426,12 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					SendChatMessage(("New highest bidder: %s (%d gold)"):format(sender, newBid),
 						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+					SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(sender, newBid),
+						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 					self.curAuction.timeRemains = math.max(self.opt.auctionTimerRefresh, self.curAuction.timeRemains)
 				else
 					if self.opt.remindInvalidBid then 
-						SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
+						SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
 					end		
 					self.curAuction.timeRemains = math.max(self.opt.invalidBidTimerRefresh, self.curAuction.timeRemains)
 				end
@@ -3520,6 +3548,10 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				bidAmount = math.floor(bidAmount * 1000)
 			end
 			if bidItemLink then
+				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4,
+					Suffix, Unique, LinkLvl, Name = string.find(bidItemLink,
+					"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
+				_, bidItemLink, _, _, _, _, _, _, _, _, _ = GetItemInfo(Id)
 				if self.curAuctions[bidItemLink] then
 					local aucdata = self.curAuctions[bidItemLink]
 					bidAmount = tonumber(bidAmount)
@@ -3536,10 +3568,12 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						end
 						SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(bidItemLink, sender, bidAmount),
 							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
+						SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(bidItemLink, sender, bidAmount),
+							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.auctionTimerRefresh)
 					else
 						if self.opt.remindInvalidBid then 
-							SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
+							SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
 						end	
 						self.curAuction.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
 					end
@@ -3856,3 +3890,9 @@ C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VREQ")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VDATA")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD MANADJ")
 --prefixes done
+
+function SendChatOtherLangangueMessage(msg, ...) 
+	if ( GetLocale() == "zhTW" ) then
+		SendChatMessage(msg, ...)
+	end 
+end 
