@@ -396,7 +396,7 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 	if (not self.curAuction.item) and (not next(self.curAuctions)) then self:Hide() return end
 	if not self.opt.allowMultipleAuctions then
 		-- old code for single auctions
-		if self.curAuction.isCountingDown then
+		if self.curAuction.isCountingDown and not self.curAuction.isPaused then
 			local curPot = math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)
 			self.curAuction.timeRemains = self.curAuction.timeRemains - elapsed
 			if (curPot ~= math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)) and
@@ -426,7 +426,7 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 		-- new code for multiple auctions
 		local auctionsToFinish = emptytable()
 		for item, aucdata in pairs(self.curAuctions) do
-			if aucdata.isCountingDown then
+			if aucdata.isCountingDown and not self.curAuction.isPaused then
 				local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
 				aucdata.timeRemains = aucdata.timeRemains - elapsed
 				if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
@@ -2124,6 +2124,28 @@ function GDKPd:CountdownAuction(item)
 	end
 end
 
+function GDKPd:PauseAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucData.isPaused = true
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isPaused = true
+	end
+end
+
+function GDKPd:ResumeAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucData.isPaused = false
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isPaused = false
+	end
+end
+
 function GDKPd:QueueAuction(item, minbid, increment)
 	if (not GDKPd.curAuction.item) or GDKPd.opt.allowMultipleAuctions then
 		GDKPd:AuctionOffItem(item, minbid, increment)
@@ -2599,6 +2621,7 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
 		end
 	end)
+	f.restartAuction:Hide()
 	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.countdownAuction:SetText(L["Countdown auction"])
 	f.countdownAuction:SetHeight(15)
@@ -2613,7 +2636,27 @@ function GDKPd:GetUnoccupiedFrame()
 	else
 		f.countdownAuction:Show()
 	end
-	f.restartAuction:Hide()
+	f.pauseAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.pauseAuction:SetText(L["Pause auction"])
+	f.pauseAuction:SetHeight(15)
+	f.pauseAuction:SetPoint("BOTTOMLEFT", f.countdownAuction, "TOPLEFT", 0, 5)
+	f.pauseAuction:SetPoint("BOTTOMRIGHT", f.countdownAuction, "TOPRIGHT", 0, 5)
+	f.pauseAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:PauseAuction(itemLink)
+	end)
+
+	f.resumeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.resumeAuction:SetText(L["Resume auction"])
+	f.resumeAuction:SetHeight(15)
+	f.resumeAuction:SetPoint("BOTTOMLEFT", f.countdownAuction, "TOPLEFT", 0, 5)
+	f.resumeAuction:SetPoint("BOTTOMRIGHT", f.countdownAuction, "TOPRIGHT", 0, 5)
+	f.resumeAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:ResumeAuction(itemLink)
+	end)
+	f.resumeAuction:Hide()
+
 	f.cancelAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.cancelAuction:SetText(L["Cancel auction"])
 	f.cancelAuction:SetAllPoints(f.restartAuction)
@@ -2713,9 +2756,9 @@ function GDKPd:GetUnoccupiedFrame()
 	f.isActive = false
 	function f:UpdateSize()
 		if (self.bigHide:IsShown() or self.cancelAuction:IsShown()) then
-			self:SetHeight(100)
+			self:SetHeight(120)
 		else
-			self:SetHeight(60)
+			self:SetHeight(80)
 		end
 		if not GDKPd.opt.automaticallyCountdownAuctions then
 			self:SetHeight(self:GetHeight() + 20)
@@ -3483,7 +3526,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					self.ignoredLinks[itemLink] = nil
 				end
 			end
-			if self.curAuction.item and msg:find("%d+") == 1 then
+			if self.curAuction.item and msg:find("%d+") == 1 and not self.curAuction.isPaused then
 				local newBid = tonumber(msg:match("([0-9]+%.?[0-9]*)[kK]"))
 				if not newBid then
 					newBid = tonumber(msg:match("%d+"))
@@ -3625,7 +3668,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				bidAmount = math.floor(bidAmount * 1000)
 			end
 			if bidItemLink then
-				if self.curAuctions[bidItemLink] then
+				if self.curAuctions[bidItemLink] and not self.curAuctions.isPaused then
 					local aucdata = self.curAuctions[bidItemLink]
 					bidAmount = tonumber(bidAmount)
 					if bidAmount >= aucdata.curBid and GDKPd.opt.roundBids then
