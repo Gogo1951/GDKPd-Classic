@@ -2471,7 +2471,7 @@ function GDKPd:GetUnoccupiedFrame()
 	if c > 1 then
 		f:SetPoint("TOPLEFT", GDKPd.frames[c - 1], "BOTTOMLEFT")
 	else
-		f:SetPoint("TOPLEFT", anchor, "TOPLEFT")
+		f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 400)
 	end
 	--f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, (-60)*(c-1))
 	
