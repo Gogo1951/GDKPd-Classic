@@ -426,7 +426,7 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 		-- new code for multiple auctions
 		local auctionsToFinish = emptytable()
 		for item, aucdata in pairs(self.curAuctions) do
-			if aucdata.isCountingDown and not self.curAuction.isPaused then
+			if aucdata.isCountingDown and not aucdata.isPaused then
 				local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
 				aucdata.timeRemains = aucdata.timeRemains - elapsed
 				if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
@@ -2120,7 +2120,7 @@ function GDKPd:CountdownAuction(item)
 	if self.opt.allowMultipleAuctions then
 		local aucdata = self.curAuctions[item]
 		if aucdata ~= nil then
-			aucData.isCountingDown = true
+			aucdata.isCountingDown = true
 		end
 	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
 		self.curAuction.isCountingDown = true
@@ -2131,7 +2131,7 @@ function GDKPd:PauseAuction(item)
 	if self.opt.allowMultipleAuctions then
 		local aucdata = self.curAuctions[item]
 		if aucdata ~= nil then
-			aucData.isPaused = true
+			aucdata.isPaused = true
 		end
 	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
 		self.curAuction.isPaused = true
@@ -2142,7 +2142,7 @@ function GDKPd:ResumeAuction(item)
 	if self.opt.allowMultipleAuctions then
 		local aucdata = self.curAuctions[item]
 		if aucdata ~= nil then
-			aucData.isPaused = false
+			aucdata.isPaused = false
 		end
 	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
 		self.curAuction.isPaused = false
@@ -3723,8 +3723,8 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				bidAmount = math.floor(bidAmount * 1000)
 			end
 			if bidItemLink then
-				if self.curAuctions[bidItemLink] and not self.curAuctions.isPaused then
-					local aucdata = self.curAuctions[bidItemLink]
+				local aucdata = self.curAuctions[bidItemLink]
+				if aucdata ~= nil and not aucdata.isPaused then
 					bidAmount = tonumber(bidAmount)
 					if bidAmount >= aucdata.curBid and GDKPd.opt.roundBids then
 						bidAmount = math.floor(aucdata.curBid + aucdata.increment * math.floor((bidAmount - aucdata.curBid) / aucdata.increment))
