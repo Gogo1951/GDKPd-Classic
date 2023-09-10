@@ -2653,26 +2653,11 @@ function GDKPd:GetUnoccupiedFrame()
 		GDKPd:CloseAuction(itemLink)
 	end)
 
-	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
-	f.countdownAuction:SetText(L["Countdown auction"])
-	f.countdownAuction:SetHeight(15)
-	f.countdownAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
-	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
-	f.countdownAuction:SetScript("OnClick", function(self)
-		local itemLink = f.itemlink
-		GDKPd:CountdownAuction(itemLink)
-	end)
-	if GDKPd.opt.automaticallyCountdownAuctions then
-		f.countdownAuction:Hide()
-	else
-		f.countdownAuction:Show()
-	end
-
 	f.pauseAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.pauseAuction:SetText(L["Pause auction"])
 	f.pauseAuction:SetHeight(15)
-	f.pauseAuction:SetPoint("BOTTOMLEFT", f.countdownAuction, "TOPLEFT", 0, 5)
-	f.pauseAuction:SetPoint("BOTTOMRIGHT", f.countdownAuction, "TOPRIGHT", 0, 5)
+	f.pauseAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
+	f.pauseAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
 	f.pauseAuction:SetScript("OnClick", function(self)
 		local itemLink = f.itemlink
 		GDKPd:PauseAuction(itemLink)
@@ -2683,8 +2668,8 @@ function GDKPd:GetUnoccupiedFrame()
 	f.resumeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.resumeAuction:SetText(L["Resume auction"])
 	f.resumeAuction:SetHeight(15)
-	f.resumeAuction:SetPoint("BOTTOMLEFT", f.countdownAuction, "TOPLEFT", 0, 5)
-	f.resumeAuction:SetPoint("BOTTOMRIGHT", f.countdownAuction, "TOPRIGHT", 0, 5)
+	f.resumeAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
+	f.resumeAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
 	f.resumeAuction:SetScript("OnClick", function(self)
 		local itemLink = f.itemlink
 		GDKPd:ResumeAuction(itemLink)
@@ -2692,6 +2677,21 @@ function GDKPd:GetUnoccupiedFrame()
 		f.pauseAuction:Show()
 	end)
 	f.resumeAuction:Hide()
+
+	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.countdownAuction:SetText(L["Countdown auction"])
+	f.countdownAuction:SetHeight(15)
+	f.countdownAuction:SetPoint("BOTTOMLEFT", f.pauseAuction, "TOPLEFT", 0, 5)
+	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.pauseAuction, "TOPRIGHT", 0, 5)
+	f.countdownAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:CountdownAuction(itemLink)
+	end)
+	if GDKPd.opt.automaticallyCountdownAuctions then
+		f.countdownAuction:Hide()
+	else
+		f.countdownAuction:Show()
+	end
 
 	f.cancelAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.cancelAuction:SetText(L["Cancel auction"])
