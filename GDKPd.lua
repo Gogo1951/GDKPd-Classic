@@ -26,7 +26,7 @@ local DEBUGFORCEVERSION
 
 --[===[@debug@
 DEBUGFORCEVERSION="2.0.0"
---@end-debug@]==]]===]
+--@end-debug@]===]
 -- fetch locale data
 local L = LibStub("AceLocale-3.0"):GetLocale("GDKPd")
 -- versioning info
@@ -413,8 +413,7 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
 					end
 				else
-					-- SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
-					SendChatMessage(L["[Caution] %d seconds remaining!"]:format(curPot * self.opt.countdownTimerJump), "RAID")
+					SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
 				end
 		end
 		if self.curAuction.timeRemains <= 0 then
@@ -442,11 +441,9 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
 						end
 					else
-						SendChatMessage(L["[Caution] %d seconds remaining for item %s!"]:format(
-					(curPot * self.opt.countdownTimerJump), item), "RAID")				
-						--SendChatMessage(L["[Caution] %d seconds remaining for item"] ..
-					--(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
-					--"!", "RAID")				
+						SendChatMessage("[Caution] " ..
+					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
+					"!", "RAID")				
 					end
 			end
 			if aucdata.timeRemains <= 0 then
@@ -2123,10 +2120,6 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		SendChatMessage(("Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-			
-		SendChatOtherLangangueMessage(L["Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."]:
-			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		GDKPd.curAuction.item = item
 		GDKPd.curAuction.curBid = (minbid - increment)
 		GDKPd.curAuction.increment = increment
@@ -2136,10 +2129,6 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		-- new code
 		SendChatMessage((
 			"Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"):
-			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage((
-			L["Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"]):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		local aucTable = emptytable()
@@ -2165,11 +2154,6 @@ function GDKPd:RevertHighestBid(link)
 		SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(link, aucdata.bidders[1].bidderName,
 			aucdata.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		
-		SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(link, aucdata.bidders[1].bidderName,
-			aucdata.bidders[1].bidAmount),
-			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-			
 		-- fix name-to-index assigns
 		for num, t in ipairs(aucdata.bidders) do
 			aucdata.bidders[t.bidderName] = num
@@ -2182,9 +2166,6 @@ function GDKPd:RevertHighestBid(link)
 		self.curAuction.bidders[self.curAuction.bidders[1].bidderName] = nil
 		tremove(self.curAuction.bidders, 1)
 		SendChatMessage(("New highest bidder: %s (%d gold)"):format(self.curAuction.bidders[1].bidderName,
-			self.curAuction.bidders[1].bidAmount),
-			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(self.curAuction.bidders[1].bidderName,
 			self.curAuction.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		for num, t in ipairs(self.curAuction.bidders) do
@@ -2202,13 +2183,9 @@ function GDKPd:CancelAuction(link)
 		if not aucdata then return end
 		SendChatMessage(("Auction cancelled for %s."):format(link),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage(L[("Auction cancelled for %s.")]:format(link),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		self.curAuctions[link] = nil
 	elseif self.curAuction.item == link then
 		SendChatMessage("Auction cancelled.",
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage(L["Auction cancelled."],
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		table.wipe(self.curAuction)
 		if self.auctionList[1] then
@@ -2252,8 +2229,6 @@ function GDKPd:FinishAuction(link)
 				paymentString = paymentString:format(remAmount)
 				SendChatMessage(("Auction finished for %s. Winner: %s. %s."):format(link, aucdata.bidders[1].bidderName,
 					paymentString), "RAID")
-				SendChatOtherLangangueMessage(L["Auction finished for %s. Winner: %s. %s."]:format(link, aucdata.bidders[1].bidderName,
-					paymentString), "RAID")
 				GDKPd_PotData.potAmount = (GDKPd_PotData.potAmount or 0) + remAmount
 				GDKPd_PotData.playerBalance[aucdata.bidders[1].bidderName] = GDKPd_PotData.playerBalance[
 					aucdata.bidders[1].bidderName] - remAmount
@@ -2283,7 +2258,6 @@ function GDKPd:FinishAuction(link)
 				end
 			else
 				SendChatMessage(("Auction finished for %s. No bids recieved."):format(link), "RAID")
-				SendChatOtherLangangueMessage(L["Auction finished for %s. No bids recieved."]:format(link), "RAID")
 			end
 			aucdata:Release()
 		end
@@ -2480,7 +2454,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.timer.text:SetText(math.ceil(timeRemain))
 	end)
 	f.timer.text = f.timer:CreateFontString()
-	f.timer.text:SetFont(GameFontNormal:GetFont(), GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
+	f.timer.text:SetFont("Fonts\\FRIZQT__.TTF", GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
 		"OUTLINE")
 	f.timer.text:SetAllPoints()
 	f.timer.text:Hide()
@@ -3345,7 +3319,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 		LibStub("AceConfig-3.0"):RegisterOptionsTable("GDKPd", self.options)
 		SlashCmdList["GDKPD"] = function(input)
 			local cmd, link = input:match("(%S+)%s+(|c........|Hitem:.+|r)")
-			if (cmd and (cmd == "auction" or cmd == "a") ) and link then
+			if (cmd and cmd == "auction") and link then
 				if self:PlayerIsML((UnitName("player")), true) then
 					for itemLink in string.gmatch(link, "|c........|Hitem:.-|r") do
 						local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
@@ -3476,12 +3450,10 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					SendChatMessage(("New highest bidder: %s (%d gold)"):format(sender, newBid),
 						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-					SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(sender, newBid),
-						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 					self.curAuction.timeRemains = math.max(self.opt.auctionTimerRefresh, self.curAuction.timeRemains)
 				else
 					if self.opt.remindInvalidBid then 
-						SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
+						SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
 					end		
 					self.curAuction.timeRemains = math.max(self.opt.invalidBidTimerRefresh, self.curAuction.timeRemains)
 				end
@@ -3598,10 +3570,6 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				bidAmount = math.floor(bidAmount * 1000)
 			end
 			if bidItemLink then
-				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4,
-					Suffix, Unique, LinkLvl, Name = string.find(bidItemLink,
-					"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
-				_, bidItemLink, _, _, _, _, _, _, _, _, _ = GetItemInfo(Id)
 				if self.curAuctions[bidItemLink] then
 					local aucdata = self.curAuctions[bidItemLink]
 					bidAmount = tonumber(bidAmount)
@@ -3618,12 +3586,10 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						end
 						SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(bidItemLink, sender, bidAmount),
 							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-						SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(bidItemLink, sender, bidAmount),
-							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.auctionTimerRefresh)
 					else
 						if self.opt.remindInvalidBid then 
-							SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
+							SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
 						end	
 						self.curAuction.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
 					end
@@ -3940,9 +3906,3 @@ C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VREQ")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VDATA")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD MANADJ")
 --prefixes done
-
-function SendChatOtherLangangueMessage(msg, ...) 
-	if ( GetLocale() == "zhTW" ) then
-		SendChatMessage(msg, ...)
-	end 
-end
