@@ -2252,15 +2252,6 @@ function GDKPd:CancelAuction(link)
 			self.auctionList[1]:Release()
 			tremove(self.auctionList, 1)
 		end
-	else
-		for i, v in ipairs(self.auctionList) do
-			local item = select(1, unpack(v))
-			if link == item then
-				self.auctionList[i]:Release()
-				tremove(self.auctionList, i)
-				return
-			end
-		end
 	end
 end
 
@@ -2437,6 +2428,7 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd.frames[c].resumeAuction:Hide()
 			if (GDKPd:PlayerIsML((UnitName("player")), true) and (not GDKPd.opt.slimML)) then
 				GDKPd.frames[c].cancelAuction:Show()
+				GDKPd.frames[c].cancelAuction:Disable()
 				GDKPd.frames[c].reverseBid:Show()
 				if not GDKPd.opt.automaticallyCountdownAuctions then
 					GDKPd.frames[c].countdownAuction:Show()
@@ -2709,6 +2701,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.closeAuction:Hide()
 		f:UpdateSize()
 	end)
+	f.cancelAuction:Disable()
 	f.reverseBid = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.reverseBid:SetText(L["Revert highest bid"])
 	f.reverseBid:SetAllPoints(f.bigHide)
@@ -3573,6 +3566,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						f.closeAuction:Show()
 						f.pauseAuction:Show()
 						f:UpdateSize()
+						f.cancelAuction:Enable()
 					end
 					f.bidIncrement = bidIncrement
 					f:SetCurBid(minBid, false, false, true)
