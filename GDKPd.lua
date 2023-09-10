@@ -2070,16 +2070,40 @@ function GDKPd:AnnounceLoot(shouldQueueAuctions)
 	for _, item in ipairs(lootList) do
 		if shouldQueueAuctions then
 			local itemID = tonumber(item:match("|Hitem:(%d+):"))
-			--local iLvL = (select(4, GetItemInfo(itemID)))
-			--local startBid = (GDKPd.opt.customItemSettings[itemID] and GDKPd.opt.customItemSettings[itemID].minBid) or  or self.opt.startBid
-			--local increment = (GDKPd.opt.customItemSettings[itemID] and GDKPd.opt.customItemSettings[itemID].minIncrement) or self.opt.increment
-			--GDKPd:QueueAuction(item, startBid, increment)
-			GDKPd:QueueAuction(item, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+			if self.opt.automaticallyStartAuctions and not self:IsItemQueued(itemLink) then
+				self:QueueAuction(item, self:GetStartBid(itemID), self:GetMinIncrement(itemID))
+			else
+				self:PrepareAuction(item)
+			end
 		else
 			SendAddonMessage("GDKPD START", item, "RAID")
 		end
 	end
 	lootList:Release()
+end
+
+function GDKPd:PrepareAuction(item)
+	local f = self:GetUnoccupiedFrame()
+	f.cancelAuction:Hide()
+	f.restartAuction:SetText(L["Start auction"])
+	f.restartAuction:Show()
+	f.bigHide:Show()
+	f.reverseBid:Hide()
+	f:SetItem(item)
+	f:Show()
+end
+
+function GDKPd:IsItemQueued(item)
+	if GDKPd.curAuction.item ~= nil and GDKPd.curAuction.item == item then
+		return true
+	end
+	for i, v in ipairs(GDKPd.auctionList) do
+		local queuedItem = select(1, unpack(v))
+		if queuedItem == item then
+			return true
+		end
+	end
+	return false
 end
 
 function GDKPd:QueueAuction(item, minbid, increment)
@@ -2181,7 +2205,7 @@ function GDKPd:CancelAuction(link)
 		SendChatOtherLangangueMessage(L[("Auction cancelled for %s.")]:format(link),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		self.curAuctions[link] = nil
-	else
+	elseif self.curAuction.item == link then
 		SendChatMessage("Auction cancelled.",
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		SendChatOtherLangangueMessage(L["Auction cancelled."],
@@ -2191,6 +2215,15 @@ function GDKPd:CancelAuction(link)
 			self:AuctionOffItem(unpack(self.auctionList[1]))
 			self.auctionList[1]:Release()
 			tremove(self.auctionList, 1)
+		end
+	else
+		for i, v in ipairs(self.auctionList) do
+			local item = select(1, unpack(v))
+			if link == item then
+				self.auctionList[i]:Release()
+				tremove(self.auctionList, i)
+				return
+			end
 		end
 	end
 end
@@ -2375,6 +2408,7 @@ function GDKPd:GetUnoccupiedFrame()
 				GDKPd.frames[c].cancelAuction:Hide()
 				GDKPd.frames[c].reverseBid:Hide()
 			end
+			GDKPd.frames[c].restartAuction:SetText(L["Start auction"])
 			GDKPd.frames[c].reverseBid:Disable()
 			GDKPd.frames[c]:UpdateSize()
 			return GDKPd.frames[c]
@@ -2557,16 +2591,19 @@ function GDKPd:GetUnoccupiedFrame()
 	f.restartAuction:SetPoint("BOTTOMLEFT", f.bigHide, "TOPLEFT", 0, 5)
 	f.restartAuction:SetPoint("BOTTOMRIGHT", f.bigHide, "TOPRIGHT", 0, 5)
 	f.restartAuction:SetScript("OnClick", function(self)
-		f:Hide()
 		local itemLink = f.itemlink
-		local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
-		GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+		if not GDKPd:IsItemQueued(itemLink) then
+			f:Hide()
+			local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
+			GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+		end
 	end)
 	f.restartAuction:Hide()
 	f.cancelAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.cancelAuction:SetText(L["Cancel auction"])
 	f.cancelAuction:SetAllPoints(f.restartAuction)
 	f.cancelAuction:SetScript("OnClick", function(self)
+		f.restartAuction:SetText(L["Restart auction"])
 		GDKPd:CancelAuction(f.itemlink)
 		self:Hide()
 		f.reverseBid:Hide()
@@ -2727,6 +2764,7 @@ local defaults = { profile = {
 	announceRaidWarning = true,
 	announceBidRaidWarning = false,
 	allowMultipleAuctions = false,
+	automaticallyStartAuctions = true,
 	announcePotAfterAuction = true,
 	hideChatMessages = {
 		auctionAnnounce = false,
@@ -3051,6 +3089,14 @@ GDKPd.options = {
 					get = function() return GDKPd.opt.remindInvalidBid end,
 					order = 19,
 				},
+				automaticallyStartAuctions = {
+					type = "toggle",
+					name = L["Automatically start auctions"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.automaticallyStartAuctions = value end,
+					get = function() return GDKPd.opt.automaticallyStartAuctions end,
+					order = 20,
+				},
 			},
 			order = 1,
 		},
@@ -3303,7 +3349,11 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				if self:PlayerIsML((UnitName("player")), true) then
 					for itemLink in string.gmatch(link, "|c........|Hitem:.-|r") do
 						local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
-						self:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+						if self.opt.automaticallyStartAuctions and not self:IsItemQueued(itemLink) then
+							self:QueueAuction(itemLink, self:GetStartBid(itemID), self:GetMinIncrement(itemID))
+						else
+							self:PrepareAuction(itemLink)
+						end
 					end
 				else
 					print(L["Cannot start auction without Master Looter privileges."])
@@ -3895,4 +3945,4 @@ function SendChatOtherLangangueMessage(msg, ...)
 	if ( GetLocale() == "zhTW" ) then
 		SendChatMessage(msg, ...)
 	end 
-end 
+end
