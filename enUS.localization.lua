@@ -157,3 +157,5 @@ What do you want to do with this pot?]=] ] = true
 L["Additional Raid Members"] = true
 L["Automatically start auctions"] = true
 L["Start auction"] = true
+L["Automatically countdown auctions"] = true
+L["Countdown auction"] = true

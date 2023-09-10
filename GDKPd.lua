@@ -396,58 +396,62 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 	if (not self.curAuction.item) and (not next(self.curAuctions)) then self:Hide() return end
 	if not self.opt.allowMultipleAuctions then
 		-- old code for single auctions
-		local curPot = math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)
-		self.curAuction.timeRemains = self.curAuction.timeRemains - elapsed
-		if (curPot ~= math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)) and
-			(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
-			(not (next(self.curAuction.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh)))
-			and (curPot > 0) then
-				if self.opt.enhanceTimeRemaining then
-					if self.curAuction.bidders[1] then
-						table.sort(self.curAuction.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
-						for num, t in ipairs(self.curAuction.bidders) do
-							self.curAuction.bidders[t.bidderName] = num
+		if self.curAuction.isCountingDown then
+			local curPot = math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)
+			self.curAuction.timeRemains = self.curAuction.timeRemains - elapsed
+			if (curPot ~= math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)) and
+				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
+				(not (next(self.curAuction.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh)))
+				and (curPot > 0) then
+					if self.opt.enhanceTimeRemaining then
+						if self.curAuction.bidders[1] then
+							table.sort(self.curAuction.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+							for num, t in ipairs(self.curAuction.bidders) do
+								self.curAuction.bidders[t.bidderName] = num
+							end
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
+						else
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
 						end
-						SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
 					else
-						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
+						SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
 					end
-				else
-					SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
-				end
-		end
-		if self.curAuction.timeRemains <= 0 then
-			self:Hide()
-			self:FinishAuction()
+			end
+			if self.curAuction.timeRemains <= 0 then
+				self:Hide()
+				self:FinishAuction()
+			end
 		end
 	else
 		-- new code for multiple auctions
 		local auctionsToFinish = emptytable()
 		for item, aucdata in pairs(self.curAuctions) do
-			local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
-			aucdata.timeRemains = aucdata.timeRemains - elapsed
-			if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
-				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
-				(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
-				(curPot > 0) then
-					if self.opt.enhanceTimeRemaining then
-						if aucdata.bidders[1] then
-							table.sort(aucdata.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
-							for num, t in ipairs(aucdata.bidders) do
-								aucdata.bidders[t.bidderName] = num
+			if aucdata.isCountingDown then
+				local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
+				aucdata.timeRemains = aucdata.timeRemains - elapsed
+				if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
+					(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
+					(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
+					(curPot > 0) then
+						if self.opt.enhanceTimeRemaining then
+							if aucdata.bidders[1] then
+								table.sort(aucdata.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+								for num, t in ipairs(aucdata.bidders) do
+									aucdata.bidders[t.bidderName] = num
+								end
+								SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
+							else
+								SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
 							end
-							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
 						else
-							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
-						end
-					else
 						SendChatMessage("[Caution] " ..
 					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
 					"!", "RAID")				
-					end
-			end
-			if aucdata.timeRemains <= 0 then
-				tinsert(auctionsToFinish, item)
+						end
+				end
+				if aucdata.timeRemains <= 0 then
+					tinsert(auctionsToFinish, item)
+				end
 			end
 		end
 		if #auctionsToFinish > 0 then
@@ -2086,12 +2090,17 @@ function GDKPd:PrepareAuction(item)
 	f.restartAuction:Show()
 	f.bigHide:Show()
 	f.reverseBid:Hide()
+	f.countdownAuction:Hide()
 	f:SetItem(item)
 	f:Show()
 end
 
 function GDKPd:IsItemQueued(item)
-	if GDKPd.curAuction.item ~= nil and GDKPd.curAuction.item == item then
+	if self.opt.allowMultipleAuctions then
+		if self.curAuctions[item] ~= nil then
+			return true
+		end
+	elseif GDKPd.curAuction.item ~= nil and GDKPd.curAuction.item == item then
 		return true
 	end
 	for i, v in ipairs(GDKPd.auctionList) do
@@ -2101,6 +2110,17 @@ function GDKPd:IsItemQueued(item)
 		end
 	end
 	return false
+end
+
+function GDKPd:CountdownAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucData.isCountingDown = true
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isCountingDown = true
+	end
 end
 
 function GDKPd:QueueAuction(item, minbid, increment)
@@ -2125,6 +2145,7 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		GDKPd.curAuction.increment = increment
 		GDKPd.curAuction.bidders = emptytable()
 		GDKPd.curAuction.timeRemains = self.opt.auctionTimer
+		GDKPd.curAuction.isCountingDown = self.opt.automaticallyCountdownAuctions
 	else
 		-- new code
 		SendChatMessage((
@@ -2137,6 +2158,7 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		aucTable.increment = increment
 		aucTable.bidders = emptytable()
 		aucTable.timeRemains = self.opt.auctionTimer
+		aucTable.isCountingDown = self.opt.automaticallyCountdownAuctions
 		GDKPd.curAuctions[item] = aucTable
 	end
 	GDKPd:Show()
@@ -2375,9 +2397,13 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd.frames[c].isActive = false
 			GDKPd.frames[c].restartAuction:Hide()
 			GDKPd.frames[c].bigHide:Hide()
+			GDKPd.frames[c].countdownAuction:Hide()
 			if (GDKPd:PlayerIsML((UnitName("player")), true) and (not GDKPd.opt.slimML)) then
 				GDKPd.frames[c].cancelAuction:Show()
 				GDKPd.frames[c].reverseBid:Show()
+				if not GDKPd.opt.automaticallyCountdownAuctions then
+					GDKPd.frames[c].countdownAuction:Show()
+				end
 			else
 				GDKPd.frames[c].cancelAuction:Hide()
 				GDKPd.frames[c].reverseBid:Hide()
@@ -2454,7 +2480,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.timer.text:SetText(math.ceil(timeRemain))
 	end)
 	f.timer.text = f.timer:CreateFontString()
-	f.timer.text:SetFont("Fonts\\FRIZQT__.TTF", GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
+	f.timer.text:SetFont(GameFontNormal:GetFont(), GetCVarBool("useUiScale") and (32 * (GetCVar("uiScale") or 1)) or 28,
 		"OUTLINE")
 	f.timer.text:SetAllPoints()
 	f.timer.text:Hide()
@@ -2572,6 +2598,20 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
 		end
 	end)
+	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.countdownAuction:SetText(L["Countdown auction"])
+	f.countdownAuction:SetHeight(15)
+	f.countdownAuction:SetPoint("BOTTOMLEFT", f.restartAuction, "TOPLEFT", 0, 5)
+	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.restartAuction, "TOPRIGHT", 0, 5)
+	f.countdownAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:CountdownAuction(itemLink)
+	end)
+	if GDKPd.opt.automaticallyCountdownAuctions then
+		f.countdownAuction:Hide()
+	else
+		f.countdownAuction:Show()
+	end
 	f.restartAuction:Hide()
 	f.cancelAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.cancelAuction:SetText(L["Cancel auction"])
@@ -2583,6 +2623,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f.reverseBid:Hide()
 		f.bigHide:Show()
 		f.restartAuction:Show()
+		f.countdownAuction:Hide()
 	end)
 	f.reverseBid = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.reverseBid:SetText(L["Revert highest bid"])
@@ -2675,6 +2716,9 @@ function GDKPd:GetUnoccupiedFrame()
 		else
 			self:SetHeight(60)
 		end
+		if not GDKPd.opt.automaticallyCountdownAuctions then
+			self:SetHeight(self:GetHeight() + 20)
+		end
 	end
 
 	f:UpdateSize()
@@ -2739,6 +2783,7 @@ local defaults = { profile = {
 	announceBidRaidWarning = false,
 	allowMultipleAuctions = false,
 	automaticallyStartAuctions = true,
+	automaticallyCountdownAuctions = true,
 	announcePotAfterAuction = true,
 	hideChatMessages = {
 		auctionAnnounce = false,
@@ -3070,6 +3115,14 @@ GDKPd.options = {
 					set = function(info, value) GDKPd.opt.automaticallyStartAuctions = value end,
 					get = function() return GDKPd.opt.automaticallyStartAuctions end,
 					order = 20,
+				},
+				automaticallyCountdownAuctions = {
+					type = "toggle",
+					name = L["Automatically countdown auctions"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.automaticallyCountdownAuctions = value end,
+					get = function() return GDKPd.opt.automaticallyCountdownAuctions end,
+					order = 21,
 				},
 			},
 			order = 1,
@@ -3457,6 +3510,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end		
 					self.curAuction.timeRemains = math.max(self.opt.invalidBidTimerRefresh, self.curAuction.timeRemains)
 				end
+				self.curAuction.isCountingDown = self.opt.automaticallyCountdownAuctions
 			end
 			local bidderName, newBid = string.match(msg, "New highest bidder: (%S+) %((%d+) gold%)")
 			if bidderName and self.InProgressBidFrame then
@@ -3591,8 +3645,9 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						if self.opt.remindInvalidBid then 
 							SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
 						end	
-						self.curAuction.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
+						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
 					end
+					aucdata.isCountingDown = self.opt.automaticallyCountdownAuctions
 				end
 			end
 			local bidItem, bidderName, newBid = string.match(msg,
