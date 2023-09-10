@@ -2085,13 +2085,16 @@ end
 
 function GDKPd:PrepareAuction(item)
 	local f = self:GetUnoccupiedFrame()
-	f.cancelAuction:Hide()
 	f.restartAuction:SetText(L["Start auction"])
-	f.restartAuction:Show()
-	f.highestbidder:Hide()
-	f.bigHide:Show()
+	f.cancelAuction:Hide()
 	f.reverseBid:Hide()
+	f.bigHide:Show()
+	f.restartAuction:Show()
 	f.countdownAuction:Hide()
+	f.pauseAuction:Hide()
+	f.resumeAuction:Hide()
+	f.closeAuction:Hide()
+	f:UpdateSize()
 	f:SetItem(item)
 	f:Show()
 end
@@ -2143,6 +2146,17 @@ function GDKPd:ResumeAuction(item)
 		end
 	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
 		self.curAuction.isPaused = false
+	end
+end
+
+function GDKPd:CloseAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			self:FinishAuction(item)
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self:FinishAuction()
 	end
 end
 
@@ -2420,16 +2434,21 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd.frames[c].isActive = false
 			GDKPd.frames[c].restartAuction:Hide()
 			GDKPd.frames[c].bigHide:Hide()
-			GDKPd.frames[c].countdownAuction:Hide()
+			GDKPd.frames[c].resumeAuction:Hide()
 			if (GDKPd:PlayerIsML((UnitName("player")), true) and (not GDKPd.opt.slimML)) then
 				GDKPd.frames[c].cancelAuction:Show()
 				GDKPd.frames[c].reverseBid:Show()
 				if not GDKPd.opt.automaticallyCountdownAuctions then
 					GDKPd.frames[c].countdownAuction:Show()
 				end
+				GDKPd.frames[c].pauseAuction:Show()
+				GDKPd.frames[c].closeAuction:Show()
 			else
 				GDKPd.frames[c].cancelAuction:Hide()
 				GDKPd.frames[c].reverseBid:Hide()
+				GDKPd.frames[c].countdownAuction:Hide()
+				GDKPd.frames[c].pauseAuction:Hide()
+				GDKPd.frames[c].closeAuction:Hide()
 			end
 			GDKPd.frames[c].restartAuction:SetText(L["Start auction"])
 			GDKPd.frames[c].reverseBid:Disable()
@@ -2455,6 +2474,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f:SetPoint("TOPLEFT", anchor, "TOPLEFT")
 	end
 	--f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, (-60)*(c-1))
+	
 	f:Hide()
 	f:SetFrameStrata("DIALOG")
 	f.icon = f:CreateTexture()
@@ -2622,11 +2642,22 @@ function GDKPd:GetUnoccupiedFrame()
 		end
 	end)
 	f.restartAuction:Hide()
+
+	f.closeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.closeAuction:SetText(L["Close auction"])
+	f.closeAuction:SetHeight(15)
+	f.closeAuction:SetPoint("BOTTOMLEFT", f.restartAuction, "TOPLEFT", 0, 5)
+	f.closeAuction:SetPoint("BOTTOMRIGHT", f.restartAuction, "TOPRIGHT", 0, 5)
+	f.closeAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:CloseAuction(itemLink)
+	end)
+
 	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.countdownAuction:SetText(L["Countdown auction"])
 	f.countdownAuction:SetHeight(15)
-	f.countdownAuction:SetPoint("BOTTOMLEFT", f.restartAuction, "TOPLEFT", 0, 5)
-	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.restartAuction, "TOPRIGHT", 0, 5)
+	f.countdownAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
+	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
 	f.countdownAuction:SetScript("OnClick", function(self)
 		local itemLink = f.itemlink
 		GDKPd:CountdownAuction(itemLink)
@@ -2636,6 +2667,7 @@ function GDKPd:GetUnoccupiedFrame()
 	else
 		f.countdownAuction:Show()
 	end
+
 	f.pauseAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.pauseAuction:SetText(L["Pause auction"])
 	f.pauseAuction:SetHeight(15)
@@ -2644,6 +2676,8 @@ function GDKPd:GetUnoccupiedFrame()
 	f.pauseAuction:SetScript("OnClick", function(self)
 		local itemLink = f.itemlink
 		GDKPd:PauseAuction(itemLink)
+		self:Hide()
+		f.resumeAuction:Show()
 	end)
 
 	f.resumeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
@@ -2654,6 +2688,8 @@ function GDKPd:GetUnoccupiedFrame()
 	f.resumeAuction:SetScript("OnClick", function(self)
 		local itemLink = f.itemlink
 		GDKPd:ResumeAuction(itemLink)
+		self:Hide()
+		f.pauseAuction:Show()
 	end)
 	f.resumeAuction:Hide()
 
@@ -2668,6 +2704,10 @@ function GDKPd:GetUnoccupiedFrame()
 		f.bigHide:Show()
 		f.restartAuction:Show()
 		f.countdownAuction:Hide()
+		f.pauseAuction:Hide()
+		f.resumeAuction:Hide()
+		f.closeAuction:Hide()
+		f:UpdateSize()
 	end)
 	f.reverseBid = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.reverseBid:SetText(L["Revert highest bid"])
@@ -2678,6 +2718,10 @@ function GDKPd:GetUnoccupiedFrame()
 	if (not self:PlayerIsML((UnitName("player")), true)) or self.opt.slimML then
 		f.cancelAuction:Hide()
 		f.reverseBid:Hide()
+		f.pauseAuction:Hide()
+		f.resumeAuction:Hide()
+		f.closeAuction:Hide()
+		f.countdownAuction:Hide()
 	end
 	f.reverseBid:Disable()
 	function f:SetItem(itemlink)
@@ -2755,14 +2799,23 @@ function GDKPd:GetUnoccupiedFrame()
 	f:SetAlpha(self.opt.appearAlpha)
 	f.isActive = false
 	function f:UpdateSize()
-		if (self.bigHide:IsShown() or self.cancelAuction:IsShown()) then
-			self:SetHeight(120)
-		else
-			self:SetHeight(80)
+		local height = 60
+		if self.countdownAuction:IsShown() then
+			height = height + 20
 		end
-		if not GDKPd.opt.automaticallyCountdownAuctions then
-			self:SetHeight(self:GetHeight() + 20)
+		if self.closeAuction:IsShown() then
+			height = height + 20
 		end
+		if self.pauseAuction:IsShown() or self.resumeAuction:IsShown() then
+			height = height + 20
+		end
+		if self.cancelAuction:IsShown() or self.restartAuction:IsShown() then
+			height = height + 20
+		end
+		if self.bigHide:IsShown() or self.reverseBid:IsShown() then
+			height = height + 20
+		end
+		self:SetHeight(height)
 	end
 
 	f:UpdateSize()
@@ -3513,6 +3566,14 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					f.isMultiBid = false
 					self.InProgressBidFrame = f
+					if not self.opt.slimML then
+						if not self.opt.automaticallyCountdownAuctions then
+							f.countdownAuction:Show()
+						end
+						f.closeAuction:Show()
+						f.pauseAuction:Show()
+						f:UpdateSize()
+					end
 					f.bidIncrement = bidIncrement
 					f:SetCurBid(minBid, false, false, true)
 					f:SetAuctionTimer(auctionTimer, auctionTimerRefresh)
@@ -3782,6 +3843,11 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				if not self:FetchFrameFromLink(arg[2]) then
 					local f = self:GetUnoccupiedFrame()
 					f.isActive = true
+					f.closeAuction:Hide()
+					f.pauseAuction:Hide()
+					f.resumeAuction:Hide()
+					f.countdownAuction:Hide()
+					f:UpdateSize()
 					f:SetItem(arg[2])
 					f:Show()
 				end

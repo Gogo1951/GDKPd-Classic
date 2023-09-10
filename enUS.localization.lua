@@ -161,3 +161,4 @@ L["Automatically countdown auctions"] = true
 L["Countdown auction"] = true
 L["Pause auction"] = true
 L["Resume auction"] = true
+L["Close auction"] = true
