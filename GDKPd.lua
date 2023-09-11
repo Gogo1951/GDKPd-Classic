@@ -26,7 +26,7 @@ local DEBUGFORCEVERSION
 
 --[===[@debug@
 DEBUGFORCEVERSION="2.0.0"
---@end-debug@]==]]===]
+--@end-debug@]===]
 -- fetch locale data
 local L = LibStub("AceLocale-3.0"):GetLocale("GDKPd")
 -- versioning info
@@ -396,61 +396,62 @@ GDKPd:SetScript("OnUpdate", function(self, elapsed)
 	if (not self.curAuction.item) and (not next(self.curAuctions)) then self:Hide() return end
 	if not self.opt.allowMultipleAuctions then
 		-- old code for single auctions
-		local curPot = math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)
-		self.curAuction.timeRemains = self.curAuction.timeRemains - elapsed
-		if (curPot ~= math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)) and
-			(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
-			(not (next(self.curAuction.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh)))
-			and (curPot > 0) then
-				if self.opt.enhanceTimeRemaining then
-					if self.curAuction.bidders[1] then
-						table.sort(self.curAuction.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
-						for num, t in ipairs(self.curAuction.bidders) do
-							self.curAuction.bidders[t.bidderName] = num
+		if self.curAuction.isCountingDown and not self.curAuction.isPaused then
+			local curPot = math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)
+			self.curAuction.timeRemains = self.curAuction.timeRemains - elapsed
+			if (curPot ~= math.floor(self.curAuction.timeRemains / self.opt.countdownTimerJump)) and
+				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
+				(not (next(self.curAuction.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh)))
+				and (curPot > 0) then
+					if self.opt.enhanceTimeRemaining then
+						if self.curAuction.bidders[1] then
+							table.sort(self.curAuction.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+							for num, t in ipairs(self.curAuction.bidders) do
+								self.curAuction.bidders[t.bidderName] = num
+							end
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
+						else
+							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
 						end
-						SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.bidders[1].bidderName, self.curAuction.curBid, self.curAuction.curBid + self.curAuction.increment), "RAID")
 					else
-						SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, self.curAuction.item, self.curAuction.curBid + self.curAuction.increment), "RAID")
+						SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
 					end
-				else
-					-- SendChatMessage("[Caution] " .. (curPot * self.opt.countdownTimerJump) .. " seconds remaining!", "RAID")
-					SendChatMessage(L["[Caution] %d seconds remaining!"]:format(curPot * self.opt.countdownTimerJump), "RAID")
-				end
-		end
-		if self.curAuction.timeRemains <= 0 then
-			self:Hide()
-			self:FinishAuction()
+			end
+			if self.curAuction.timeRemains <= 0 then
+				self:Hide()
+				self:FinishAuction()
+			end
 		end
 	else
 		-- new code for multiple auctions
 		local auctionsToFinish = emptytable()
 		for item, aucdata in pairs(self.curAuctions) do
-			local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
-			aucdata.timeRemains = aucdata.timeRemains - elapsed
-			if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
-				(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
-				(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
-				(curPot > 0) then
-					if self.opt.enhanceTimeRemaining then
-						if aucdata.bidders[1] then
-							table.sort(aucdata.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
-							for num, t in ipairs(aucdata.bidders) do
-								aucdata.bidders[t.bidderName] = num
+			if aucdata.isCountingDown and not aucdata.isPaused then
+				local curPot = math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)
+				aucdata.timeRemains = aucdata.timeRemains - elapsed
+				if (curPot ~= math.floor(aucdata.timeRemains / self.opt.countdownTimerJump)) and
+					(curPot * self.opt.countdownTimerJump < self.opt.auctionTimer) and
+					(not (next(aucdata.bidders, nil) and (curPot * self.opt.countdownTimerJump == self.opt.auctionTimerRefresh))) and
+					(curPot > 0) then
+						if self.opt.enhanceTimeRemaining then
+							if aucdata.bidders[1] then
+								table.sort(aucdata.bidders, function(a, b) return a.bidAmount > b.bidAmount end)
+								for num, t in ipairs(aucdata.bidders) do
+									aucdata.bidders[t.bidderName] = num
+								end
+								SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
+							else
+								SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
 							end
-							SendChatMessage(("[Caution] %d seconds remaining on %s. Current bid %s (%d gold); bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.bidders[1].bidderName, aucdata.curBid, aucdata.curBid + aucdata.increment), "RAID")
 						else
-							SendChatMessage(("[Caution] %d seconds remaining on %s. Bid at least %d gold!"):format(curPot * self.opt.countdownTimerJump, aucdata.item, aucdata.curBid + aucdata.increment), "RAID")
+						SendChatMessage("[Caution] " ..
+					(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
+					"!", "RAID")				
 						end
-					else
-						SendChatMessage(L["[Caution] %d seconds remaining for item %s!"]:format(
-					(curPot * self.opt.countdownTimerJump), item), "RAID")				
-						--SendChatMessage(L["[Caution] %d seconds remaining for item"] ..
-					--(curPot * self.opt.countdownTimerJump) .. " seconds remaining for item " .. item ..
-					--"!", "RAID")				
-					end
-			end
-			if aucdata.timeRemains <= 0 then
-				tinsert(auctionsToFinish, item)
+				end
+				if aucdata.timeRemains <= 0 then
+					tinsert(auctionsToFinish, item)
+				end
 			end
 		end
 		if #auctionsToFinish > 0 then
@@ -522,7 +523,7 @@ status.header:SetNormalTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Header
 status.header:SetSize(133, 34)
 status.header.text = status.header:CreateFontString()
 status.header.text:SetPoint("TOP", 0, -7)
-status.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+status.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 status.header.text:SetTextColor(1, 1, 1)
 status.header.text:SetText("GDKPd")
 status.header:SetMovable(true)
@@ -539,7 +540,7 @@ status:SetScript("OnShow", function(self)
 	self:UpdateSize()
 end)
 status.text = status:CreateFontString()
-status.text:SetFont(GameFontNormal:GetFont(), 15, "")
+status.text:SetFont(GameFontNormal:GetFont(), 8, "")
 status.text:SetTextColor(1, 1, 1)
 status.text:SetPoint("TOPLEFT", 15, -15)
 status.text:SetJustifyH("LEFT")
@@ -626,7 +627,7 @@ status.itemhistory:SetScript("OnClick", function()
 	GDKPd.history:Show()
 end)
 status.announcetext = status:CreateFontString()
-status.announcetext:SetFont(GameFontNormal:GetFont(), 15, "")
+status.announcetext:SetFont(GameFontNormal:GetFont(), 8, "")
 status.announcetext:SetTextColor(1, 1, 1)
 status.announcetext:SetPoint("TOPLEFT", status.itemhistory, "BOTTOMLEFT", 0, -5)
 status.announcetext:SetJustifyH("LEFT")
@@ -723,7 +724,7 @@ history.header:SetSize(133, 34)
 history.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 history.header.text = history.header:CreateFontString()
 history.header.text:SetPoint("TOP", 0, -7)
-history.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+history.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 history.header.text:SetTextColor(1, 1, 1)
 history.header.text:SetText(L["History"])
 history.header:SetMovable(true)
@@ -752,19 +753,19 @@ history.entries = setmetatable({}, { __index = function(t, v)
 	end
 
 	f.date = f:CreateFontString()
-	f.date:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.date:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.date:SetTextColor(1, 1, 1)
 	f.date:SetPoint("TOPLEFT")
 	f.date:SetWidth(55)
 	f.amount = f:CreateFontString()
-	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetPoint("TOPLEFT", f.date, "TOPRIGHT", 5, 0)
 	f.amount:SetPoint("BOTTOMLEFT", f.date, "BOTTOMRIGHT", 5, 0)
 	f.amount:SetWidth(40)
 	f.amount:SetJustifyH("RIGHT")
 	f.note = f:CreateFontString()
-	f.note:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.note:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.note:SetTextColor(1, 1, 1)
 	f.note:SetPoint("BOTTOMLEFT", f.amount, "BOTTOMRIGHT", 5, 0)
 	f.note:SetPoint("TOPRIGHT")
@@ -881,7 +882,7 @@ itemsettings.header:SetSize(133, 34)
 itemsettings.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 itemsettings.header.text = itemsettings.header:CreateFontString()
 itemsettings.header.text:SetPoint("TOP", 0, -7)
-itemsettings.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+itemsettings.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 itemsettings.header.text:SetTextColor(1, 1, 1)
 itemsettings.header.text:SetText(L["Item settings"])
 itemsettings.header:SetMovable(true)
@@ -901,19 +902,19 @@ itemsettings.thead:SetPoint("TOPLEFT", 15, -15)
 itemsettings.thead:SetPoint("TOPRIGHT", -15, -15)
 itemsettings.thead:SetHeight(15)
 itemsettings.thead.item = itemsettings.thead:CreateFontString()
-itemsettings.thead.item:SetFont(GameFontNormal:GetFont(), 15, "")
+itemsettings.thead.item:SetFont(GameFontNormal:GetFont(), 10, "")
 itemsettings.thead.item:SetTextColor(1, 0.82, 0)
 --itemsettings.thead.item:SetText(L["Itm"])
 itemsettings.thead.item:SetPoint("LEFT")
 itemsettings.thead.item:SetWidth(15)
 itemsettings.thead.startbid = itemsettings.thead:CreateFontString()
-itemsettings.thead.startbid:SetFont(GameFontNormal:GetFont(), 15)
+itemsettings.thead.startbid:SetFont(GameFontNormal:GetFont(), 10)
 itemsettings.thead.startbid:SetTextColor(1, 0.82, 0)
 itemsettings.thead.startbid:SetText(L["Starting bid"])
 itemsettings.thead.startbid:SetPoint("LEFT", itemsettings.thead.item, "RIGHT")
 itemsettings.thead.startbid:SetWidth(102.5)
 itemsettings.thead.minincre = itemsettings.thead:CreateFontString()
-itemsettings.thead.minincre:SetFont(GameFontNormal:GetFont(), 15, "")
+itemsettings.thead.minincre:SetFont(GameFontNormal:GetFont(), 10, "")
 itemsettings.thead.minincre:SetTextColor(1, 0.82, 0)
 itemsettings.thead.minincre:SetText(L["Minimum increment"])
 itemsettings.thead.minincre:SetPoint("LEFT", itemsettings.thead.startbid, "RIGHT")
@@ -1000,7 +1001,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end)
 	f.minBid:SetScript("OnEscapePressed",
 		function(self) self:SetNumber(GDKPd.opt.customItemSettings[f.itemID].minBid) self:ClearFocus() end)
-	f.minBid:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.minBid:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.minBid:SetTextColor(1, 1, 1)
 	f.minBid:SetPoint("TOPLEFT", f.itemicon, "TOPRIGHT")
 	f.minBid:SetPoint("BOTTOMLEFT", f.itemicon, "BOTTOMRIGHT")
@@ -1017,7 +1018,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end
 	end)
 	f.minBid.g = f:CreateFontString()
-	f.minBid.g:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.minBid.g:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.minBid.g:SetTextColor(1, 0.82, 0)
 	f.minBid.g:SetText("g")
 	f.minBid.g:SetPoint("TOPRIGHT", f.itemicon, "TOPRIGHT", 102.5, 0)
@@ -1043,7 +1044,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 			else self:SetText("") end
 			self:ClearFocus()
 		end)
-	f.minIncrement:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.minIncrement:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.minIncrement:SetTextColor(1, 1, 1)
 	f.minIncrement:SetPoint("TOPLEFT", f.minBid.g, "TOPRIGHT")
 	f.minIncrement:SetPoint("BOTTOMLEFT", f.minBid.g, "BOTTOMRIGHT")
@@ -1059,7 +1060,7 @@ itemsettings.entries = setmetatable({}, { __index = function(t, v)
 		end
 	end)
 	f.minIncrement.g = f:CreateFontString()
-	f.minIncrement.g:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.minIncrement.g:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.minIncrement.g:SetTextColor(1, 0.82, 0)
 	f.minIncrement.g:SetText("g")
 	f.minIncrement.g:SetPoint("TOPRIGHT", f.minBid.g, "TOPRIGHT", 102.5, 0)
@@ -1141,7 +1142,7 @@ itemlevels.header:SetSize(133, 34)
 itemlevels.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 itemlevels.header.text = itemlevels.header:CreateFontString()
 itemlevels.header.text:SetPoint("TOP", 0, -7)
-itemlevels.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+itemlevels.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 itemlevels.header.text:SetTextColor(1, 1, 1)
 itemlevels.header.text:SetText(L["iLvL ranges"])
 itemlevels.header:SetMovable(true)
@@ -1161,25 +1162,25 @@ itemlevels.thead:SetPoint("TOPLEFT", 15, -15)
 itemlevels.thead:SetPoint("TOPRIGHT", -15, -15)
 itemlevels.thead:SetHeight(15)
 itemlevels.thead.min = itemlevels.thead:CreateFontString()
-itemlevels.thead.min:SetFont(GameFontNormal:GetFont(), 15, "")
+itemlevels.thead.min:SetFont(GameFontNormal:GetFont(), 10, "")
 itemlevels.thead.min:SetTextColor(1, 0.82, 0)
 itemlevels.thead.min:SetPoint("LEFT")
 itemlevels.thead.min:SetWidth(25)
 itemlevels.thead.min:SetText("Min")
 itemlevels.thead.max = itemlevels.thead:CreateFontString()
-itemlevels.thead.max:SetFont(GameFontNormal:GetFont(), 15, "")
+itemlevels.thead.max:SetFont(GameFontNormal:GetFont(), 10, "")
 itemlevels.thead.max:SetTextColor(1, 0.82, 0)
 itemlevels.thead.max:SetPoint("LEFT", itemlevels.thead.min, "RIGHT", 5, 0)
 itemlevels.thead.max:SetWidth(25)
 itemlevels.thead.max:SetText("Max")
 itemlevels.thead.minbid = itemlevels.thead:CreateFontString()
-itemlevels.thead.minbid:SetFont(GameFontNormal:GetFont(), 15, "")
+itemlevels.thead.minbid:SetFont(GameFontNormal:GetFont(), 10, "")
 itemlevels.thead.minbid:SetTextColor(1, 0.82, 0)
 itemlevels.thead.minbid:SetPoint("LEFT", itemlevels.thead.max, "RIGHT", 5, 0)
 itemlevels.thead.minbid:SetWidth(60)
 itemlevels.thead.minbid:SetText(L["Starting bid"])
 itemlevels.thead.mininc = itemlevels.thead:CreateFontString()
-itemlevels.thead.mininc:SetFont(GameFontNormal:GetFont(), 15, "")
+itemlevels.thead.mininc:SetFont(GameFontNormal:GetFont(), 10, "")
 itemlevels.thead.mininc:SetTextColor(1, 0.82, 0)
 itemlevels.thead.mininc:SetPoint("LEFT", itemlevels.thead.minbid, "RIGHT", 5, 0)
 itemlevels.thead.mininc:SetWidth(80)
@@ -1272,25 +1273,25 @@ itemlevels.entries = setmetatable({}, { __index = function(t, v)
 	end
 	f:SetHeight(15)
 	f.min = f:CreateFontString()
-	f.min:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.min:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.min:SetTextColor(1, 1, 1)
 	f.min:SetPoint("LEFT")
 	f.min:SetWidth(25)
 	f.min:SetJustifyH("RIGHT")
 	f.max = f:CreateFontString()
-	f.max:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.max:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.max:SetTextColor(1, 1, 1)
 	f.max:SetPoint("LEFT", f.min, "RIGHT", 5, 0)
 	f.max:SetWidth(25)
 	f.max:SetJustifyH("RIGHT")
 	f.minbid = f:CreateFontString()
-	f.minbid:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.minbid:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.minbid:SetTextColor(1, 1, 1)
 	f.minbid:SetPoint("LEFT", f.max, "RIGHT", 5, 0)
 	f.minbid:SetWidth(60)
 	f.minbid:SetJustifyH("RIGHT")
 	f.mininc = f:CreateFontString()
-	f.mininc:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.mininc:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.mininc:SetTextColor(1, 1, 1)
 	f.mininc:SetPoint("LEFT", f.minbid, "RIGHT", 5, 0)
 	f.mininc:SetWidth(80)
@@ -1355,7 +1356,7 @@ version.header:SetSize(133, 34)
 version.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 version.header.text = version.header:CreateFontString()
 version.header.text:SetPoint("TOP", 0, -7)
-version.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+version.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 version.header.text:SetTextColor(1, 1, 1)
 version.header.text:SetText(L["Versions"])
 version.header:SetMovable(true)
@@ -1384,13 +1385,13 @@ version.entries = setmetatable({}, { __index = function(t, v)
 	end
 
 	f.name = f:CreateFontString()
-	f.name:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
+	f.name:SetFont(GameFontNormal:GetFont(), 8, "OUTLINE")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetWidth(110)
 	f.name:SetJustifyH("LEFT")
 	f.version = f:CreateFontString()
-	f.version:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
+	f.version:SetFont(GameFontNormal:GetFont(), 8, "OUTLINE")
 	f.version:SetPoint("BOTTOMLEFT", f.name, "BOTTOMRIGHT", 5, 0)
 	f.version:SetPoint("TOPRIGHT")
 	f.version:SetJustifyH("LEFT")
@@ -1549,7 +1550,7 @@ balance.header:SetSize(133, 34)
 balance.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 balance.header.text = balance.header:CreateFontString()
 balance.header.text:SetPoint("TOP", 0, -7)
-balance.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+balance.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 balance.header.text:SetTextColor(1, 1, 1)
 balance.header.text:SetText(L["Balance"])
 balance.header:SetMovable(true)
@@ -1585,12 +1586,12 @@ balance.entries = setmetatable({}, { __index = function(t, v)
 	f.name = f:CreateFontString()
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetPoint("BOTTOMLEFT")
-	f.name:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.name:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetJustifyH("LEFT")
 	f.amount = f:CreateFontString()
 	f.amount:SetPoint("TOPLEFT", f.name, "TOPRIGHT", 5, 0)
-	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetJustifyH("RIGHT")
 	f.add = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
@@ -1732,7 +1733,7 @@ playerBalance.header:SetSize(133, 34)
 playerBalance.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 playerBalance.header.text = playerBalance.header:CreateFontString()
 playerBalance.header.text:SetPoint("TOP", 0, -7)
-playerBalance.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+playerBalance.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 playerBalance.header.text:SetTextColor(1, 1, 1)
 playerBalance.header.text:SetText(L["Player balance"])
 playerBalance.header:SetMovable(true)
@@ -1770,12 +1771,12 @@ playerBalance.entries = setmetatable({}, { __index = function(t, v)
 	f.name = f:CreateFontString()
 	f.name:SetPoint("TOPLEFT")
 	f.name:SetPoint("BOTTOMLEFT")
-	f.name:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.name:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.name:SetTextColor(1, 1, 1)
 	f.name:SetJustifyH("LEFT")
 	f.amount = f:CreateFontString()
 	f.amount:SetPoint("TOPLEFT", f.name, "TOPRIGHT", 5, 0)
-	f.amount:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.amount:SetFont(GameFontNormal:GetFont(), 8, "")
 	f.amount:SetTextColor(1, 1, 1)
 	f.amount:SetJustifyH("RIGHT")
 	f.amount:SetPoint("BOTTOMRIGHT")
@@ -1857,7 +1858,7 @@ export.header:SetSize(133, 34)
 export.header:SetHitRectInsets(31.5, 31.5, 4.5, 14.5)
 export.header.text = export.header:CreateFontString()
 export.header.text:SetPoint("TOP", 0, -7)
-export.header.text:SetFont(GameFontNormal:GetFont(), 15, "")
+export.header.text:SetFont(GameFontNormal:GetFont(), 8, "")
 export.header.text:SetTextColor(1, 1, 1)
 export.header.text:SetText(L["Pot export"])
 export.header:SetMovable(true)
@@ -1871,14 +1872,14 @@ export.header:SetPoint("TOP", history, "BOTTOM", 0, -10)
 export.box = CreateFrame("EditBox", nil, export)
 export.box:SetMultiLine(true)
 export.box:SetAutoFocus(false)
-export.box:SetFont(GameFontNormal:GetFont(), 15, "")
+export.box:SetFont(GameFontNormal:GetFont(), 12, "")
 export.box:SetPoint("TOP", export.header, "TOP", 0, -21)
 export.box:SetJustifyH("LEFT")
 export.box:SetWidth(50)
 do
 	local st = export.box.SetText
 	local dummy_text = UIParent:CreateFontString()
-	dummy_text:SetFont(GameFontNormal:GetFont(), 15, "")
+	dummy_text:SetFont(GameFontNormal:GetFont(), 12, "")
 	function export.box:SetText(text)
 		dummy_text:SetText(text)
 		self:SetWidth(dummy_text:GetStringWidth())
@@ -2070,16 +2071,93 @@ function GDKPd:AnnounceLoot(shouldQueueAuctions)
 	for _, item in ipairs(lootList) do
 		if shouldQueueAuctions then
 			local itemID = tonumber(item:match("|Hitem:(%d+):"))
-			--local iLvL = (select(4, GetItemInfo(itemID)))
-			--local startBid = (GDKPd.opt.customItemSettings[itemID] and GDKPd.opt.customItemSettings[itemID].minBid) or  or self.opt.startBid
-			--local increment = (GDKPd.opt.customItemSettings[itemID] and GDKPd.opt.customItemSettings[itemID].minIncrement) or self.opt.increment
-			--GDKPd:QueueAuction(item, startBid, increment)
-			GDKPd:QueueAuction(item, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+			if self.opt.automaticallyStartAuctions and not self:IsItemQueued(itemLink) then
+				self:QueueAuction(item, self:GetStartBid(itemID), self:GetMinIncrement(itemID))
+			else
+				self:PrepareAuction(item)
+			end
 		else
 			SendAddonMessage("GDKPD START", item, "RAID")
 		end
 	end
 	lootList:Release()
+end
+
+function GDKPd:PrepareAuction(item)
+	local f = self:GetUnoccupiedFrame()
+	f.restartAuction:SetText(L["Start auction"])
+	f.cancelAuction:Hide()
+	f.reverseBid:Hide()
+	f.bigHide:Show()
+	f.restartAuction:Show()
+	f.countdownAuction:Hide()
+	f.pauseAuction:Hide()
+	f.resumeAuction:Hide()
+	f.closeAuction:Hide()
+	f:UpdateSize()
+	f:SetItem(item)
+	f:Show()
+end
+
+function GDKPd:IsItemQueued(item)
+	if self.opt.allowMultipleAuctions then
+		if self.curAuctions[item] ~= nil then
+			return true
+		end
+	elseif GDKPd.curAuction.item ~= nil and GDKPd.curAuction.item == item then
+		return true
+	end
+	for i, v in ipairs(GDKPd.auctionList) do
+		local queuedItem = select(1, unpack(v))
+		if queuedItem == item then
+			return true
+		end
+	end
+	return false
+end
+
+function GDKPd:CountdownAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucdata.isCountingDown = true
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isCountingDown = true
+	end
+end
+
+function GDKPd:PauseAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucdata.isPaused = true
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isPaused = true
+	end
+end
+
+function GDKPd:ResumeAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			aucdata.isPaused = false
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self.curAuction.isPaused = false
+	end
+end
+
+function GDKPd:CloseAuction(item)
+	if self.opt.allowMultipleAuctions then
+		local aucdata = self.curAuctions[item]
+		if aucdata ~= nil then
+			self:FinishAuction(item)
+		end
+	elseif self.curAuction.item ~= nil and self.curAuction.item == item then
+		self:FinishAuction()
+	end
 end
 
 function GDKPd:QueueAuction(item, minbid, increment)
@@ -2099,23 +2177,16 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		SendChatMessage(("Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-			
-		SendChatOtherLangangueMessage(L["Bidding starts on %s. Please bid in raid chat, starting bid %d gold, minimum increment %d gold."]:
-			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		GDKPd.curAuction.item = item
 		GDKPd.curAuction.curBid = (minbid - increment)
 		GDKPd.curAuction.increment = increment
 		GDKPd.curAuction.bidders = emptytable()
 		GDKPd.curAuction.timeRemains = self.opt.auctionTimer
+		GDKPd.curAuction.isCountingDown = self.opt.automaticallyCountdownAuctions
 	else
 		-- new code
 		SendChatMessage((
 			"Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"):
-			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage((
-			L["Bidding starts on %s. Bid using format '[item] 1000', starting bid %d gold, minimum increment %d gold. TTL: %d/%d"]):
 			format(item, minbid, increment, self.opt.auctionTimer, self.opt.auctionTimerRefresh),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		local aucTable = emptytable()
@@ -2124,6 +2195,7 @@ function GDKPd:AuctionOffItem(item, minbid, increment)
 		aucTable.increment = increment
 		aucTable.bidders = emptytable()
 		aucTable.timeRemains = self.opt.auctionTimer
+		aucTable.isCountingDown = self.opt.automaticallyCountdownAuctions
 		GDKPd.curAuctions[item] = aucTable
 	end
 	GDKPd:Show()
@@ -2141,11 +2213,6 @@ function GDKPd:RevertHighestBid(link)
 		SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(link, aucdata.bidders[1].bidderName,
 			aucdata.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		
-		SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(link, aucdata.bidders[1].bidderName,
-			aucdata.bidders[1].bidAmount),
-			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-			
 		-- fix name-to-index assigns
 		for num, t in ipairs(aucdata.bidders) do
 			aucdata.bidders[t.bidderName] = num
@@ -2158,9 +2225,6 @@ function GDKPd:RevertHighestBid(link)
 		self.curAuction.bidders[self.curAuction.bidders[1].bidderName] = nil
 		tremove(self.curAuction.bidders, 1)
 		SendChatMessage(("New highest bidder: %s (%d gold)"):format(self.curAuction.bidders[1].bidderName,
-			self.curAuction.bidders[1].bidAmount),
-			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(self.curAuction.bidders[1].bidderName,
 			self.curAuction.bidders[1].bidAmount),
 			(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		for num, t in ipairs(self.curAuction.bidders) do
@@ -2178,13 +2242,9 @@ function GDKPd:CancelAuction(link)
 		if not aucdata then return end
 		SendChatMessage(("Auction cancelled for %s."):format(link),
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage(L[("Auction cancelled for %s.")]:format(link),
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		self.curAuctions[link] = nil
-	else
+	elseif self.curAuction.item == link then
 		SendChatMessage("Auction cancelled.",
-			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-		SendChatOtherLangangueMessage(L["Auction cancelled."],
 			(self.opt.announceRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 		table.wipe(self.curAuction)
 		if self.auctionList[1] then
@@ -2219,8 +2279,6 @@ function GDKPd:FinishAuction(link)
 				paymentString = paymentString:format(remAmount)
 				SendChatMessage(("Auction finished for %s. Winner: %s. %s."):format(link, aucdata.bidders[1].bidderName,
 					paymentString), "RAID")
-				SendChatOtherLangangueMessage(L["Auction finished for %s. Winner: %s. %s."]:format(link, aucdata.bidders[1].bidderName,
-					paymentString), "RAID")
 				GDKPd_PotData.potAmount = (GDKPd_PotData.potAmount or 0) + remAmount
 				GDKPd_PotData.playerBalance[aucdata.bidders[1].bidderName] = GDKPd_PotData.playerBalance[
 					aucdata.bidders[1].bidderName] - remAmount
@@ -2250,7 +2308,6 @@ function GDKPd:FinishAuction(link)
 				end
 			else
 				SendChatMessage(("Auction finished for %s. No bids recieved."):format(link), "RAID")
-				SendChatOtherLangangueMessage(L["Auction finished for %s. No bids recieved."]:format(link), "RAID")
 			end
 			aucdata:Release()
 		end
@@ -2281,6 +2338,16 @@ function GDKPd:FinishAuction(link)
 			GDKPd.balance:Update()
 			if self.opt.announcePotAfterAuction then
 				SendChatMessage("Current pot: " .. GDKPd_PotData.potAmount .. " gold", "RAID")
+			end
+			if self.opt.announceSplitAfterAuction then
+				local numraid = GetNumGroupMembers()
+				local distAmount = (GDKPd_PotData.potAmount or 0) - (GDKPd_PotData.prevDist or 0)
+				local numadditionalmemb = self.opt.AdditonalRaidMembersAmount
+				if self.opt.AdditionalRaidMembersEnable then
+					SendChatMessage(("Current share per player: %d gold."):format((distAmount or 0) / (numraid + numadditionalmemb)), "RAID")
+				else
+					SendChatMessage(("Current share per player: %d gold."):format((distAmount or 0) / numraid), "RAID")
+				end
 			end
 			tinsert(GDKPd_PotData.curPotHistory,
 				{ item = self.curAuction.item, bid = totalAmount, name = self.curAuction.bidders[1].bidderName })
@@ -2368,13 +2435,26 @@ function GDKPd:GetUnoccupiedFrame()
 			GDKPd.frames[c].isActive = false
 			GDKPd.frames[c].restartAuction:Hide()
 			GDKPd.frames[c].bigHide:Hide()
+			GDKPd.frames[c].resumeAuction:Hide()
+			GDKPd.frames[c].highestbid:Hide()
+			GDKPd.frames[c].highestbidder:Hide()
 			if (GDKPd:PlayerIsML((UnitName("player")), true) and (not GDKPd.opt.slimML)) then
 				GDKPd.frames[c].cancelAuction:Show()
+				GDKPd.frames[c].cancelAuction:Disable()
 				GDKPd.frames[c].reverseBid:Show()
+				if not GDKPd.opt.automaticallyCountdownAuctions then
+					GDKPd.frames[c].countdownAuction:Show()
+				end
+				GDKPd.frames[c].pauseAuction:Show()
+				GDKPd.frames[c].closeAuction:Show()
 			else
 				GDKPd.frames[c].cancelAuction:Hide()
 				GDKPd.frames[c].reverseBid:Hide()
+				GDKPd.frames[c].countdownAuction:Hide()
+				GDKPd.frames[c].pauseAuction:Hide()
+				GDKPd.frames[c].closeAuction:Hide()
 			end
+			GDKPd.frames[c].restartAuction:SetText(L["Start auction"])
 			GDKPd.frames[c].reverseBid:Disable()
 			GDKPd.frames[c]:UpdateSize()
 			return GDKPd.frames[c]
@@ -2382,7 +2462,7 @@ function GDKPd:GetUnoccupiedFrame()
 		c = c + 1
 	end
 	local f = CreateFrame("Frame", "GDKPdBidFrame" .. c, UIParent, BackdropTemplateMixin and "BackdropTemplate")
-	f:SetSize(300, 120)
+	f:SetSize(300, 60)
 	f:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
 		tileSize = 16,
@@ -2398,6 +2478,7 @@ function GDKPd:GetUnoccupiedFrame()
 		f:SetPoint("TOPLEFT", anchor, "TOPLEFT")
 	end
 	--f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, (-60)*(c-1))
+	
 	f:Hide()
 	f:SetFrameStrata("DIALOG")
 	f.icon = f:CreateTexture()
@@ -2405,24 +2486,24 @@ function GDKPd:GetUnoccupiedFrame()
 	f.icon:SetTexture(1, 1, 1)
 	f.icon:SetPoint("TOPLEFT", 10, -10)
 	f.itemstring = f:CreateFontString()
-	f.itemstring:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
+	f.itemstring:SetFont(GameFontNormal:GetFont(), 12, "OUTLINE")
 	f.itemstring:SetTextColor(1, 1, 1)
 	f.itemstring:SetPoint("TOPLEFT", f.icon, "TOPRIGHT", 5, 0)
 	f.itemstring:SetWidth(160)
 	f.itemstring:SetWordWrap(false)
 	f.itemstring:SetJustifyH("LEFT")
 	f.curbid = f:CreateFontString()
-	f.curbid:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.curbid:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.curbid:SetTextColor(1, 1, 1)
 	f.curbid:SetPoint("TOPLEFT", f.itemstring, "BOTTOMLEFT", 0, -5)
 	f.curbid:Hide()
 	f.highestbid = f:CreateFontString()
-	f.highestbid:SetFont(GameFontNormal:GetFont(), 15, "OUTLINE")
+	f.highestbid:SetFont(GameFontNormal:GetFont(), 10, "OUTLINE")
 	f.highestbid:SetTextColor(0, 0.8, 0)
 	f.highestbid:SetPoint("TOPLEFT", f.curbid, "BOTTOMLEFT", 0, -5)
 	f.highestbid:SetText("You are the top bidder!")
 	f.highestbidder = f:CreateFontString()
-	f.highestbidder:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.highestbidder:SetFont(GameFontNormal:GetFont(), 10, "")
 	f.highestbidder:SetTextColor(1, 1, 1)
 	f.highestbidder:SetPoint("TOPLEFT", f.curbid, "BOTTOMLEFT", 0, -5)
 	f.timer = CreateFrame("Cooldown", nil, f)
@@ -2494,8 +2575,8 @@ function GDKPd:GetUnoccupiedFrame()
 	end)
 	f.bidbox:SetBackdrop({ bgFile = "Interface\\ChatFrame\\UI-ChatInputBorder", tile = false })
 	f.bidbox:SetTextInsets(5, 5, 2, 2)
-	f.bidbox:SetSize(60, 16)
-	f.bidbox:SetFont(GameFontNormal:GetFont(), 15, "")
+	f.bidbox:SetSize(40, 16)
+	f.bidbox:SetFont(GameFontNormal:GetFont(), 9, "")
 	f.bidbox:SetAutoFocus(false)
 	f.bidbox:SetPoint("LEFT", f.curbid, "RIGHT", 5, 0)
 	f.bidbox:SetJustifyH("RIGHT")
@@ -2557,22 +2638,82 @@ function GDKPd:GetUnoccupiedFrame()
 	f.restartAuction:SetPoint("BOTTOMLEFT", f.bigHide, "TOPLEFT", 0, 5)
 	f.restartAuction:SetPoint("BOTTOMRIGHT", f.bigHide, "TOPRIGHT", 0, 5)
 	f.restartAuction:SetScript("OnClick", function(self)
-		f:Hide()
 		local itemLink = f.itemlink
-		local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
-		GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+		if not GDKPd:IsItemQueued(itemLink) then
+			f:Hide()
+			local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
+			GDKPd:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+		end
 	end)
 	f.restartAuction:Hide()
+
+	f.closeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.closeAuction:SetText(L["Close auction"])
+	f.closeAuction:SetHeight(15)
+	f.closeAuction:SetPoint("BOTTOMLEFT", f.restartAuction, "TOPLEFT", 0, 5)
+	f.closeAuction:SetPoint("BOTTOMRIGHT", f.restartAuction, "TOPRIGHT", 0, 5)
+	f.closeAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:CloseAuction(itemLink)
+	end)
+
+	f.pauseAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.pauseAuction:SetText(L["Pause auction"])
+	f.pauseAuction:SetHeight(15)
+	f.pauseAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
+	f.pauseAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
+	f.pauseAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:PauseAuction(itemLink)
+		self:Hide()
+		f.resumeAuction:Show()
+	end)
+
+	f.resumeAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.resumeAuction:SetText(L["Resume auction"])
+	f.resumeAuction:SetHeight(15)
+	f.resumeAuction:SetPoint("BOTTOMLEFT", f.closeAuction, "TOPLEFT", 0, 5)
+	f.resumeAuction:SetPoint("BOTTOMRIGHT", f.closeAuction, "TOPRIGHT", 0, 5)
+	f.resumeAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:ResumeAuction(itemLink)
+		self:Hide()
+		f.pauseAuction:Show()
+	end)
+	f.resumeAuction:Hide()
+
+	f.countdownAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+	f.countdownAuction:SetText(L["Countdown auction"])
+	f.countdownAuction:SetHeight(15)
+	f.countdownAuction:SetPoint("BOTTOMLEFT", f.pauseAuction, "TOPLEFT", 0, 5)
+	f.countdownAuction:SetPoint("BOTTOMRIGHT", f.pauseAuction, "TOPRIGHT", 0, 5)
+	f.countdownAuction:SetScript("OnClick", function(self)
+		local itemLink = f.itemlink
+		GDKPd:CountdownAuction(itemLink)
+	end)
+	if GDKPd.opt.automaticallyCountdownAuctions then
+		f.countdownAuction:Hide()
+	else
+		f.countdownAuction:Show()
+	end
+
 	f.cancelAuction = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.cancelAuction:SetText(L["Cancel auction"])
 	f.cancelAuction:SetAllPoints(f.restartAuction)
 	f.cancelAuction:SetScript("OnClick", function(self)
+		f.restartAuction:SetText(L["Restart auction"])
 		GDKPd:CancelAuction(f.itemlink)
 		self:Hide()
 		f.reverseBid:Hide()
 		f.bigHide:Show()
 		f.restartAuction:Show()
+		f.countdownAuction:Hide()
+		f.pauseAuction:Hide()
+		f.resumeAuction:Hide()
+		f.closeAuction:Hide()
+		f:UpdateSize()
 	end)
+	f.cancelAuction:Disable()
 	f.reverseBid = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
 	f.reverseBid:SetText(L["Revert highest bid"])
 	f.reverseBid:SetAllPoints(f.bigHide)
@@ -2582,6 +2723,10 @@ function GDKPd:GetUnoccupiedFrame()
 	if (not self:PlayerIsML((UnitName("player")), true)) or self.opt.slimML then
 		f.cancelAuction:Hide()
 		f.reverseBid:Hide()
+		f.pauseAuction:Hide()
+		f.resumeAuction:Hide()
+		f.closeAuction:Hide()
+		f.countdownAuction:Hide()
 	end
 	f.reverseBid:Disable()
 	function f:SetItem(itemlink)
@@ -2659,11 +2804,23 @@ function GDKPd:GetUnoccupiedFrame()
 	f:SetAlpha(self.opt.appearAlpha)
 	f.isActive = false
 	function f:UpdateSize()
-		if (self.bigHide:IsShown() or self.cancelAuction:IsShown()) then
-			self:SetHeight(120)
-		else
-			self:SetHeight(120)
+		local height = 60
+		if self.countdownAuction:IsShown() then
+			height = height + 20
 		end
+		if self.closeAuction:IsShown() then
+			height = height + 20
+		end
+		if self.pauseAuction:IsShown() or self.resumeAuction:IsShown() then
+			height = height + 20
+		end
+		if self.cancelAuction:IsShown() or self.restartAuction:IsShown() then
+			height = height + 20
+		end
+		if self.bigHide:IsShown() or self.reverseBid:IsShown() then
+			height = height + 20
+		end
+		self:SetHeight(height)
 	end
 
 	f:UpdateSize()
@@ -2727,6 +2884,8 @@ local defaults = { profile = {
 	announceRaidWarning = true,
 	announceBidRaidWarning = false,
 	allowMultipleAuctions = false,
+	automaticallyStartAuctions = true,
+	automaticallyCountdownAuctions = true,
 	announcePotAfterAuction = true,
 	hideChatMessages = {
 		auctionAnnounce = false,
@@ -3009,13 +3168,21 @@ GDKPd.options = {
 					get = function() return GDKPd.opt.announcePotAfterAuction end,
 					order = 14,
 				},
+				announceSplitAfterAuction = {
+					type = "toggle",
+					name = L["Announce the current split amount after each auction"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.announceSplitAfterAuction = value end,
+					get = function() return GDKPd.opt.announceSplitAfterAuction end,
+					order = 15,
+				},
 				confirmMail = {
 					type = "toggle",
 					name = L["Require confirmation when mailing pot shares"],
 					width = "full",
 					set = function(info, value) GDKPd.opt.confirmMail = value end,
 					get = function() return GDKPd.opt.confirmMail end,
-					order = 15,
+					order = 16,
 				},
 				linkBalancePot = {
 					type = "toggle",
@@ -3024,7 +3191,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.linkBalancePot = value end,
 					get = function() return GDKPd.opt.linkBalancePot end,
-					order = 16,
+					order = 17,
 				},
 				roundBids = {
 					type = "toggle",
@@ -3032,7 +3199,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.roundBids = value end,
 					get = function() return GDKPd.opt.roundBids end,
-					order = 17,
+					order = 18,
 				},		
 				enhanceTimeRemaining = {
 					type = "toggle",
@@ -3041,7 +3208,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.enhanceTimeRemaining = value end,
 					get = function() return GDKPd.opt.enhanceTimeRemaining end,
-					order = 18,
+					order = 19,
 				},
 				remindInvalidBid = {
 					type = "toggle",
@@ -3049,7 +3216,23 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.remindInvalidBid = value end,
 					get = function() return GDKPd.opt.remindInvalidBid end,
-					order = 19,
+					order = 20,
+				},
+				automaticallyStartAuctions = {
+					type = "toggle",
+					name = L["Automatically start auctions"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.automaticallyStartAuctions = value end,
+					get = function() return GDKPd.opt.automaticallyStartAuctions end,
+					order = 21,
+				},
+				automaticallyCountdownAuctions = {
+					type = "toggle",
+					name = L["Automatically countdown auctions"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.automaticallyCountdownAuctions = value end,
+					get = function() return GDKPd.opt.automaticallyCountdownAuctions end,
+					order = 22,
 				},
 			},
 			order = 1,
@@ -3299,11 +3482,15 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 		LibStub("AceConfig-3.0"):RegisterOptionsTable("GDKPd", self.options)
 		SlashCmdList["GDKPD"] = function(input)
 			local cmd, link = input:match("(%S+)%s+(|c........|Hitem:.+|r)")
-			if (cmd and (cmd == "auction" or cmd == "a") ) and link then
+			if (cmd and cmd == "auction") and link then
 				if self:PlayerIsML((UnitName("player")), true) then
 					for itemLink in string.gmatch(link, "|c........|Hitem:.-|r") do
 						local itemID = tonumber(itemLink:match("|Hitem:(%d+):"))
-						self:QueueAuction(itemLink, GDKPd:GetStartBid(itemID), GDKPd:GetMinIncrement(itemID))
+						if self.opt.automaticallyStartAuctions and not self:IsItemQueued(itemLink) then
+							self:QueueAuction(itemLink, self:GetStartBid(itemID), self:GetMinIncrement(itemID))
+						else
+							self:PrepareAuction(itemLink)
+						end
 					end
 				else
 					print(L["Cannot start auction without Master Looter privileges."])
@@ -3392,6 +3579,15 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					f.isMultiBid = false
 					self.InProgressBidFrame = f
+					if (self:PlayerIsML((UnitName("player")), true) and (not self.opt.slimML)) then
+						if not self.opt.automaticallyCountdownAuctions then
+							f.countdownAuction:Show()
+						end
+						f.closeAuction:Show()
+						f.pauseAuction:Show()
+						f:UpdateSize()
+						f.cancelAuction:Enable()
+					end
 					f.bidIncrement = bidIncrement
 					f:SetCurBid(minBid, false, false, true)
 					f:SetAuctionTimer(auctionTimer, auctionTimerRefresh)
@@ -3405,7 +3601,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					self.ignoredLinks[itemLink] = nil
 				end
 			end
-			if self.curAuction.item and msg:find("%d+") == 1 then
+			if self.curAuction.item and msg:find("%d+") == 1 and not self.curAuction.isPaused then
 				local newBid = tonumber(msg:match("([0-9]+%.?[0-9]*)[kK]"))
 				if not newBid then
 					newBid = tonumber(msg:match("%d+"))
@@ -3426,15 +3622,14 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					SendChatMessage(("New highest bidder: %s (%d gold)"):format(sender, newBid),
 						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-					SendChatOtherLangangueMessage((L["New highest bidder: %s (%d gold)"]):format(sender, newBid),
-						(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 					self.curAuction.timeRemains = math.max(self.opt.auctionTimerRefresh, self.curAuction.timeRemains)
 				else
 					if self.opt.remindInvalidBid then 
-						SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
+						SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, self.curAuction.curBid + self.curAuction.increment, self.curAuction.item),"WHISPER",GetDefaultLanguage("player"),sender)
 					end		
 					self.curAuction.timeRemains = math.max(self.opt.invalidBidTimerRefresh, self.curAuction.timeRemains)
 				end
+				self.curAuction.isCountingDown = self.opt.automaticallyCountdownAuctions
 			end
 			local bidderName, newBid = string.match(msg, "New highest bidder: (%S+) %((%d+) gold%)")
 			if bidderName and self.InProgressBidFrame then
@@ -3548,12 +3743,8 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				bidAmount = math.floor(bidAmount * 1000)
 			end
 			if bidItemLink then
-				local _, _, Color, Ltype, Id, Enchant, Gem1, Gem2, Gem3, Gem4,
-					Suffix, Unique, LinkLvl, Name = string.find(bidItemLink,
-					"|?c?f?f?(%x*)|?H?([^:]*):?(%d+):?(%d*):?(%d*):?(%d*):?(%d*):?(%d*):?(%-?%d*):?(%-?%d*):?(%d*):?(%d*):?(%-?%d*)|?h?%[?([^%[%]]*)%]?|?h?|?r?")
-				_, bidItemLink, _, _, _, _, _, _, _, _, _ = GetItemInfo(Id)
-				if self.curAuctions[bidItemLink] then
-					local aucdata = self.curAuctions[bidItemLink]
+				local aucdata = self.curAuctions[bidItemLink]
+				if aucdata ~= nil and not aucdata.isPaused then
 					bidAmount = tonumber(bidAmount)
 					if bidAmount >= aucdata.curBid and GDKPd.opt.roundBids then
 						bidAmount = math.floor(aucdata.curBid + aucdata.increment * math.floor((bidAmount - aucdata.curBid) / aucdata.increment))
@@ -3568,15 +3759,14 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 						end
 						SendChatMessage(("New highest bidder on %s: %s (%d gold)"):format(bidItemLink, sender, bidAmount),
 							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
-						SendChatOtherLangangueMessage((L["New highest bidder on %s: %s (%d gold)"]):format(bidItemLink, sender, bidAmount),
-							(self.opt.announceBidRaidWarning and (IsRaidOfficer() or IsRaidLeader())) and "RAID_WARNING" or "RAID")
 						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.auctionTimerRefresh)
 					else
 						if self.opt.remindInvalidBid then 
-							SendChatMessage((L["Invalid. %s please bid at least %d gold on %s."]):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
+							SendChatMessage(("Invalid. %s please bid at least %d gold on %s."):format(sender, aucdata.curBid + aucdata.increment, bidItemLink),"WHISPER",GetDefaultLanguage("player"),sender)
 						end	
-						self.curAuction.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
+						aucdata.timeRemains = math.max(aucdata.timeRemains, self.opt.invalidBidTimerRefresh)
 					end
+					aucdata.isCountingDown = self.opt.automaticallyCountdownAuctions
 				end
 			end
 			local bidItem, bidderName, newBid = string.match(msg,
@@ -3667,6 +3857,11 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 				if not self:FetchFrameFromLink(arg[2]) then
 					local f = self:GetUnoccupiedFrame()
 					f.isActive = true
+					f.closeAuction:Hide()
+					f.pauseAuction:Hide()
+					f.resumeAuction:Hide()
+					f.countdownAuction:Hide()
+					f:UpdateSize()
 					f:SetItem(arg[2])
 					f:Show()
 				end
@@ -3890,9 +4085,3 @@ C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VREQ")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD VDATA")
 C_ChatInfo.RegisterAddonMessagePrefix("GDKPD MANADJ")
 --prefixes done
-
-function SendChatOtherLangangueMessage(msg, ...) 
-	if ( GetLocale() == "zhTW" ) then
-		SendChatMessage(msg, ...)
-	end 
-end 

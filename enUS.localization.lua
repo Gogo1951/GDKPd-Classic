@@ -155,3 +155,11 @@ L[ [=[You have selected the following pot:
 %s, dated %s, size %d gold.
 What do you want to do with this pot?]=] ] = true
 L["Additional Raid Members"] = true
+L["Automatically start auctions"] = true
+L["Start auction"] = true
+L["Automatically countdown auctions"] = true
+L["Countdown auction"] = true
+L["Pause auction"] = true
+L["Resume auction"] = true
+L["Close auction"] = true
+L["Announce the current split amount after each auction"] = true
