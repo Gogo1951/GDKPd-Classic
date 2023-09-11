@@ -2094,6 +2094,8 @@ function GDKPd:PrepareAuction(item)
 	f.pauseAuction:Hide()
 	f.resumeAuction:Hide()
 	f.closeAuction:Hide()
+	f.highestbid:Hide()
+	f.highestbidder:Hide()
 	f:UpdateSize()
 	f:SetItem(item)
 	f:Show()
@@ -2473,7 +2475,7 @@ function GDKPd:GetUnoccupiedFrame()
 	if c > 1 then
 		f:SetPoint("TOPLEFT", GDKPd.frames[c - 1], "BOTTOMLEFT")
 	else
-		f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 400)
+		f:SetPoint("TOPLEFT", anchor, "TOPLEFT")
 	end
 	--f:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, (-60)*(c-1))
 	
