@@ -2339,6 +2339,16 @@ function GDKPd:FinishAuction(link)
 			if self.opt.announcePotAfterAuction then
 				SendChatMessage("Current pot: " .. GDKPd_PotData.potAmount .. " gold", "RAID")
 			end
+			if self.opt.announceSplitAfterAuction then
+				local numraid = GetNumGroupMembers()
+				local distAmount = (GDKPd_PotData.potAmount or 0) - (GDKPd_PotData.prevDist or 0)
+				local numadditionalmemb = self.opt.AdditonalRaidMembersAmount
+				if self.opt.AdditionalRaidMembersEnable then
+					SendChatMessage(("Current share per player: %d gold."):format((distAmount or 0) / (numraid + numadditionalmemb)), "RAID")
+				else
+					SendChatMessage(("Current share per player: %d gold."):format((distAmount or 0) / numraid), "RAID")
+				end
+			end
 			tinsert(GDKPd_PotData.curPotHistory,
 				{ item = self.curAuction.item, bid = totalAmount, name = self.curAuction.bidders[1].bidderName })
 			self.status:Update()
@@ -3156,13 +3166,21 @@ GDKPd.options = {
 					get = function() return GDKPd.opt.announcePotAfterAuction end,
 					order = 14,
 				},
+				announceSplitAfterAuction = {
+					type = "toggle",
+					name = L["Announce the current split amount after each auction"],
+					width = "full",
+					set = function(info, value) GDKPd.opt.announceSplitAfterAuction = value end,
+					get = function() return GDKPd.opt.announceSplitAfterAuction end,
+					order = 15,
+				},
 				confirmMail = {
 					type = "toggle",
 					name = L["Require confirmation when mailing pot shares"],
 					width = "full",
 					set = function(info, value) GDKPd.opt.confirmMail = value end,
 					get = function() return GDKPd.opt.confirmMail end,
-					order = 15,
+					order = 16,
 				},
 				linkBalancePot = {
 					type = "toggle",
@@ -3171,7 +3189,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.linkBalancePot = value end,
 					get = function() return GDKPd.opt.linkBalancePot end,
-					order = 16,
+					order = 17,
 				},
 				roundBids = {
 					type = "toggle",
@@ -3179,7 +3197,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.roundBids = value end,
 					get = function() return GDKPd.opt.roundBids end,
-					order = 17,
+					order = 18,
 				},		
 				enhanceTimeRemaining = {
 					type = "toggle",
@@ -3188,7 +3206,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.enhanceTimeRemaining = value end,
 					get = function() return GDKPd.opt.enhanceTimeRemaining end,
-					order = 18,
+					order = 19,
 				},
 				remindInvalidBid = {
 					type = "toggle",
@@ -3196,7 +3214,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.remindInvalidBid = value end,
 					get = function() return GDKPd.opt.remindInvalidBid end,
-					order = 19,
+					order = 20,
 				},
 				automaticallyStartAuctions = {
 					type = "toggle",
@@ -3204,7 +3222,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.automaticallyStartAuctions = value end,
 					get = function() return GDKPd.opt.automaticallyStartAuctions end,
-					order = 20,
+					order = 21,
 				},
 				automaticallyCountdownAuctions = {
 					type = "toggle",
@@ -3212,7 +3230,7 @@ GDKPd.options = {
 					width = "full",
 					set = function(info, value) GDKPd.opt.automaticallyCountdownAuctions = value end,
 					get = function() return GDKPd.opt.automaticallyCountdownAuctions end,
-					order = 21,
+					order = 22,
 				},
 			},
 			order = 1,

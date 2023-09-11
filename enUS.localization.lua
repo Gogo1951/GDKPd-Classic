@@ -162,3 +162,4 @@ L["Countdown auction"] = true
 L["Pause auction"] = true
 L["Resume auction"] = true
 L["Close auction"] = true
+L["Announce the current split amount after each auction"] = true
