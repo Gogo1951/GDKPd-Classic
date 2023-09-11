@@ -4,12 +4,12 @@
 ## X-Credits: Poptix, Gallantron, Elwizard0, Keaarori, StolenLegacy
 
 ## Interface: 100002
-## Interface-Classic: 11403
+## Interface-Classic: 11404
 ## Interface-BCC: 20504
-## Interface-Wrath: 30401
+## Interface-Wrath: 30402
 
-## Version: 3.1.4
-## X-Curse-Packaged-Version: 3.1.4
+## Version: 3.1.5
+## X-Curse-Packaged-Version: 3.1.5
 ## X-Curse-Project-Name: gdkpdclassic 
 ## X-Curse-Project-ID: 397856
 
