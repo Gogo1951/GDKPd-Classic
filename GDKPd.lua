@@ -2887,6 +2887,7 @@ local defaults = { profile = {
 	automaticallyStartAuctions = true,
 	automaticallyCountdownAuctions = true,
 	announcePotAfterAuction = true,
+	announceSplitAfterAuction = false,
 	hideChatMessages = {
 		auctionAnnounce = false,
 		auctionAnnounceRW = false,
