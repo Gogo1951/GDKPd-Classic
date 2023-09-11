@@ -3579,7 +3579,7 @@ GDKPd:SetScript("OnEvent", function(self, event, ...)
 					end
 					f.isMultiBid = false
 					self.InProgressBidFrame = f
-					if not self.opt.slimML then
+					if (self:PlayerIsML((UnitName("player")), true) and (not self.opt.slimML)) then
 						if not self.opt.automaticallyCountdownAuctions then
 							f.countdownAuction:Show()
 						end
