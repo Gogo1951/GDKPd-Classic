@@ -2728,6 +2728,7 @@ local defaults = { profile = {
 	announceBidRaidWarning = false,
 	allowMultipleAuctions = false,
 	announcePotAfterAuction = true,
+	announceSplitAfterAuction = false,
 	hideChatMessages = {
 		auctionAnnounce = false,
 		auctionAnnounceRW = false,
