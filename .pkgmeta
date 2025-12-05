@@ -1,0 +1,28 @@
+externals:
+    Includes/LibStub:
+        url: https://github.com/Stanzilla/LibStub
+        tag: latest
+    Includes/CallbackHandler-1.0:
+        url: https://github.com/BigWigsMods/CallbackHandler-1.0
+        tag: latest
+    Includes/AceDB-3.0:
+        url: https://github.com/WoWUIDev/Ace3/tree/master/AceDB-3.0
+        tag: latest
+    Includes/AceDBOptions-3.0:
+        url: https://github.com/WoWUIDev/Ace3/tree/master/AceDBOptions-3.0
+        tag: latest
+    Includes/AceGUI-3.0:
+        url: https://github.com/WoWUIDev/Ace3/tree/master/AceGUI-3.0
+        tag: latest
+    Includes/AceConfig-3.0:
+        url: https://github.com/WoWUIDev/Ace3/tree/master/AceConfig-3.0
+        tag: latest
+    Includes/AceLocale-3.0:
+        url: https://github.com/WoWUIDev/Ace3/tree/master/AceLocale-3.0
+        tag: latest
+    Includes/LibDataBroker-1.1:
+        url: https://github.com/tekkub/libdatabroker-1-1
+        tag: latest
+    Includes/LibDBIcon-1.0:
+        url: https://github.com/funkehdude/LibDBIcon-1.0
+        tag: latest
